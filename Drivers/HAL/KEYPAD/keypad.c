@@ -27,26 +27,22 @@ void HAL_KEYPAD_GPIO_Init(void)
 
 	/* Setup First Pin Of RAWS as Output*/
 	GPIO_tempConfig.GPIO_PinNumber = KEYPAD_FIRST_ROW_PIN;
-	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
-	GPIO_tempConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_INPUT_PULLDOWN;
 	MCAL_GPIO_Init(KEYPAD_ROW_PORT, &GPIO_tempConfig);
 
 	/* Setup 2nd Pin Of RAWS as Output*/
 	GPIO_tempConfig.GPIO_PinNumber = KEYPAD_FIRST_ROW_PIN+1;
-	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
-	GPIO_tempConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_INPUT_PULLDOWN;
 	MCAL_GPIO_Init(KEYPAD_ROW_PORT, &GPIO_tempConfig);
 
 	/* Setup 3rd Pin Of RAWS as Output*/
 	GPIO_tempConfig.GPIO_PinNumber = KEYPAD_FIRST_ROW_PIN+2;
-	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
-	GPIO_tempConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_INPUT_PULLDOWN;
 	MCAL_GPIO_Init(KEYPAD_ROW_PORT, &GPIO_tempConfig);
 
 	/* Setup 4th Pin Of RAWS as Output*/
 	GPIO_tempConfig.GPIO_PinNumber = KEYPAD_FIRST_ROW_PIN+3;
-	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
-	GPIO_tempConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+	GPIO_tempConfig.GPIO_Mode = GPIO_MODE_INPUT_PULLDOWN;
 	MCAL_GPIO_Init(KEYPAD_ROW_PORT, &GPIO_tempConfig);
 
 	/* Setup First Pin Of COLS as Input*/
