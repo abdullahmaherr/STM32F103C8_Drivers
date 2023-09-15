@@ -27,7 +27,7 @@ The following drivers are included in this repository:
 
 ## Contact
 For any inquiries, please contact the repository owner:
-* Email:abdullahhegazi10@gmail.com
+* Email: abdullahhegazi10@gmail.com
 * Linked in: https://www.linkedin.com/in/abdullahmaher-10a10m1010/
 
 Enjoy working with the STM32F103x6.
