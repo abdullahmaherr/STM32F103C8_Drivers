@@ -7,7 +7,6 @@ The STM32F103x6 microcontroller family is a popular choice for embedded applicat
 The drivers in this repository provide a high-level interface to the peripherals on the STM32F103x6 microcontrollers. They make it easy to access the GPIO pins, timers, ADC, DAC, SPI, and USART peripherals.
 
 ## Drivers
-
 The following drivers are included in this repository:
 
 1. MCAL
@@ -27,7 +26,8 @@ The following drivers are included in this repository:
 
 
 ## Contact
-
-For any inquiries, please contact the repository owner at A [https://www.linkedin.com/in/abdullahmaher-10a10m1010/]
+For any inquiries, please contact the repository owner :
+Email:abdullahhegazi10@gmail.com
+Liked in: https://www.linkedin.com/in/abdullahmaher-10a10m1010/
 
 Enjoy working with the STM32F103x6.
