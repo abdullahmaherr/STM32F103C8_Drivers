@@ -24,7 +24,7 @@
  ================================================================================*/
 
 /* LCD Data bits mode configuration, its value should be 4 or 8*/
-#define LCD_DATA_BITS_MODE 4 /*Write 4 or 8 Bits Mode*/
+#define LCD_DATA_BITS_MODE 8 /*Write 4 or 8 Bits Mode*/
 
 #if((LCD_DATA_BITS_MODE != 4) && (LCD_DATA_BITS_MODE != 8))
 
@@ -39,12 +39,12 @@
 /* @ref Pin Number ID (gpio.h)*/
 
 #define LCD_RS_PORT         	        GPIOA
-#define LCD_RS_PIN      	            GPIO_PIN1
+#define LCD_RS_PIN      	            GPIO_PIN8
 
 #define LCD_E_PORT  	                GPIOA
-#define LCD_E_PIN	                    GPIO_PIN2
+#define LCD_E_PIN	                    GPIO_PIN10
 
-#define LCD_DATA_PORT              	 	GPIOB
+#define LCD_DATA_PORT              	 	GPIOA
 
 #if (LCD_DATA_BITS_MODE == 4)
 

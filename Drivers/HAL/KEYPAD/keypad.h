@@ -29,10 +29,10 @@
 
 /* Keypad Port Configurations */
 #define KEYPAD_ROW_PORT           	   GPIOB
-#define KEYPAD_FIRST_ROW_PIN       	   GPIO_PIN0
+#define KEYPAD_FIRST_ROW_PIN       	   GPIO_PIN9
 
 #define KEYPAD_COL_PORT	               GPIOB
-#define KEYPAD_FIRST_COL_PIN           GPIO_PIN4
+#define KEYPAD_FIRST_COL_PIN           GPIO_PIN5
 
 /* Keypad button logic configurations */
 #define KEYPAD_BUTTON_PRESSED            LOGIC_LOW

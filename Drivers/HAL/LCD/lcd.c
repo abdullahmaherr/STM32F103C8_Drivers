@@ -14,6 +14,7 @@
  *                                Includes                                       *
  ================================================================================*/
 #include "lcd.h"
+
 #include "STM32F103x6_GPIO_driver.h"
 #include "util.h"
 
