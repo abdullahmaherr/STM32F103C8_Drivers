@@ -4,7 +4,7 @@ This repository contains drivers for the STM32F103x6 microcontroller family. The
 ## Introduction
 The STM32F103x6 microcontroller family is a popular choice for embedded applications. It offers a wide range of features, including a 32-bit ARM Cortex-M3 processor.
 
-The drivers in this repository provide a high-level interface to the peripherals on the STM32F103x6 microcontrollers. They make it easy to access the GPIO pins, timers, ADC, DAC, SPI, and USART peripherals.
+The drivers in this repository provide a high-level interface to the peripherals on the STM32F103x6 microcontrollers. They make it easy to access the GPIO pins, timers, EXTI, ADC, SPI, I2C, and USART peripherals.
 
 ## Drivers
 The following drivers are included in this repository:
@@ -13,12 +13,15 @@ The following drivers are included in this repository:
 * GPIO
 * EXTI
 * RCC (Not Included Yet)
+* DMA (Not Included Yet)
 * NVIC (Not Included Yet)
 * Timer (Not Included Yet)
 * ADC (Not Included Yet)
-* DAC (Not Included Yet)
+* PWM (Not Included Yet)
 * SPI (Not Included Yet)
 * USART (Not Included Yet)
+* I2C (Not Included Yet)
+* CAN (Not Included Yet)
 
 2. HAL
 * Keypad
