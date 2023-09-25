@@ -1,0 +1,2 @@
+keypad.c:24:6:HAL_KEYPAD_GPIO_Init	16	static
+keypad.c:76:9:HAL_KEYPAD_PressedKey	16	static

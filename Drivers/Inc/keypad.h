@@ -16,20 +16,27 @@
 /*===============================================================================
  *                                Includes                                       *
  ================================================================================*/
-#include "stm32f103x6.h"
-#include "STM32F103x6_GPIO_driver.h"
+#include "stm32f103c8.h"
+
 
 /*===============================================================================
  *                            User Type Definitions                              *
  ================================================================================*/
 
-typedef struct{
-	GPIO_TypeDef * ROW_Port;
-	uint8_t ROW_First_Pin;  /* Specifies The GPIOx Pin Number According to @ref GPIO_PIN_NUMBER_DEFINE */
+/* Keypad configurations for number of rows and columns */
+#define KEYPAD_NUM_COLS                   4
+#define KEYPAD_NUM_ROWS                   4
 
-	GPIO_TypeDef * COL_Port;
-	uint8_t COL_First_Pin;  /* Specifies The GPIOx Pin Number According to @ref GPIO_PIN_NUMBER_DEFINE */
-}keypad_Config_t;
+/* Keypad Port Configurations */
+#define KEYPAD_ROW_PORT           	   GPIOB
+#define KEYPAD_FIRST_ROW_PIN       	   GPIO_PIN9
+
+#define KEYPAD_COL_PORT	               GPIOB
+#define KEYPAD_FIRST_COL_PIN           GPIO_PIN5
+
+/* Keypad button logic configurations */
+#define KEYPAD_BUTTON_PRESSED            LOGIC_LOW
+#define KEYPAD_BUTTON_RELEASED           LOGIC_HIGH
 
 
 /*===============================================================================
@@ -43,7 +50,7 @@ typedef struct{
  * Parameter (in) : .
  * Return         : None.
  * Note           : None																		*/
-void HAL_KEYPAD_GPIO_Init(keypad_Config_t * p_KeypadConfig);
+void HAL_KEYPAD_GPIO_Init(void);
 
 /**===============================================================================
  * Function Name  : HAL_KEYPAD_PressedKey.
@@ -51,7 +58,7 @@ void HAL_KEYPAD_GPIO_Init(keypad_Config_t * p_KeypadConfig);
  * Parameter (in) : None.
  * Return         : The Pressed Key Location.
  * Note           : None																		*/
-uint8_t HAL_KEYPAD_PressedKey(keypad_Config_t * p_KeypadConfig);
+uint8_t HAL_KEYPAD_PressedKey(void);
 
 
 #endif /* INC_KEYPAD_H_ */

@@ -19,10 +19,10 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+Drivers/HAL/Keypad \
+Drivers/HAL/LCD \
 Drivers/MCAL/EXTI \
 Drivers/MCAL/GPIO \
-Drivers/MCAL/NVIC \
-Drivers/MCAL/RCC \
 Src \
 Startup \
 

@@ -1,0 +1,9 @@
+lcd.c:35:6:HAL_LCD_Init	16	static
+lcd.c:131:6:HAL_LCD_SendCommand	16	static
+lcd.c:177:6:HAL_LCD_DisplayCharacter	16	static
+lcd.c:223:6:HAL_LCD_DisplayString	24	static
+lcd.c:246:6:HAL_LCD_MoveCursor	24	static
+lcd.c:271:6:HAL_LCD_DisplayStringRowCol	16	static
+lcd.c:277:6:HAL_LCD_ClearScreen	8	static
+lcd.c:284:6:HAL_LCD_IntgerToString	32	static
+lcd.c:292:13:delay_ms	24	static

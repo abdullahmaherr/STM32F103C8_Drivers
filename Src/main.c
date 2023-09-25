@@ -16,58 +16,13 @@
  *
  ******************************************************************************
  */
-
-#include "stm32f103x6.h"
-#include "STM32F103x6_GPIO_driver.h"
-#include "STM32F103x6_EXTI_driver.h"
-
-void delay(uint8_t num)
-{
-	uint8_t i,j;
-	for(i = 0; i <= num; i++)
-	{
-		for(j = 0; j < 255; j++);
-	}
-}
-
-void MyISR(void)
-{
-	MCAL_GPIO_TogglePin(GPIOB, GPIO_PIN13);
-	delay(200);
-}
-
-void GPIO_init(void)
-{
-	GPIO_PinConfig_t data;
-	data.GPIO_PinNumber = GPIO_PIN13;
-	data.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
-	data.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
-	MCAL_GPIO_Init(GPIOB, &data);
-}
-
-void RCC_init(void)
-{
-	RCC_GPIOA_CLK_EN();
-	RCC_GPIOB_CLK_EN();
-	RCC_AFIO_CLK_EN();
-}
-
-void EXTI_init(void)
-{
-	EXTI_PinConfig_t data;
-	data.EXTIx_Pin = EXTI1PA1;
-	data.Mask_Enable = EXTI_IRQ_ENABLE;
-	data.Trigger_Case = EXTI_FALLING_TRIG;
-	data.p_IRQ_CallBack = MyISR;
-	MCAL_EXTI_GPIO_Init(&data);
-}
+#include "stm32f103c8_gpio_driver.h"
+#include "stm32f103c8_exti_driver.h"
+#include "lcd.h"
+#include "keypad.h"
 
 int main(void)
 {
-	GPIO_init();
-	RCC_init();
-	EXTI_init();
-
-	/* Loop forever */
-	while(1);
+    /* Loop forever */
+	for(;;);
 }
