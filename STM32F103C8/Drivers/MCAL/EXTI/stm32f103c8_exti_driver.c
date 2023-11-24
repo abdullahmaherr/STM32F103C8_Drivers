@@ -76,7 +76,7 @@ void MCAL_EXTI_GPIO_DeInit()
 	EXTI->SWIER = 0x00000000;
 	EXTI->PR = 0xFFFFFFFF;  /* This Register's bits are cleared by writing a ‘1’ into the bits */
 
-	/* Disable All IRQ From NVCI*/
+	/* Disable All IRQ From NVIC*/
 	NVIC_EXTI0_DI();
 	NVIC_EXTI1_DI();
 	NVIC_EXTI2_DI();
