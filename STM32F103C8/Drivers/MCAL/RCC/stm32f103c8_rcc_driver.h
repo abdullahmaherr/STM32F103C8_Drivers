@@ -17,96 +17,163 @@
 /*===============================================================================
  *                                Includes                                       *
  ================================================================================*/
-
 #include "stm32f103c8.h"
 
 
 /*===============================================================================
  *                            User Type Definitions                              *
  ================================================================================*/
+/* Configure System Clock Switch */
+#define SYS_CLK_SRC					RCC_PLL_CLK    		/* Specifies The Clock Source According to @ref RCC Clock Source */
 
+/* Configure HSE if SYSCLK SRC Is HSE */
+#define HSE_CLK_SRC					RCC_HSE_CRYSTAL		/* Specifies The HSE Clock Source According to @ref HSE Clock Source */
+
+/* Configure PLL if SYSCLK SRC Is PLL */
+#define PLL_CLK_SRC					RCC_PLLSRC_HSI_DIV2		/* Specifies The PLLSRC Clock Source According to @ref PLLSRC Clock Source */
+#define PLLXTPRE_CLK_SRC			RCC_PLLXTPRE_HSE_DIV1	/* Specifies The PLLXTPRE Clock Source According to @ref PLLXTPRE Clock Source */
+#define PLL_MULL					RCC_PLLMULL_RESERVED	/* Specifies The PLLMULL Value According to @ref PLLMULL Value */
+
+/* Configure AHB Prescaler */
+#define AHB_CLK_PRESCALER			RCC_AHB_SYSCLK_DIV1		/* Specifies The AHB Prescaler According to @ref AHB Prescaler */
+
+/* Configure APB1 Prescaler */
+#define APB_LOW_CLK_PRESCALER			RCC_APB_HCLK_DIV1		/* Specifies The APB1 Prescaler According to @ref APB Prescaler */
+
+/* Configure APB2 Prescaler */
+#define APB_HIGH_CLK_PRESCALER			RCC_APB_HCLK_DIV1		/* Specifies The APB2 Prescaler According to @ref APB Prescaler */
 
 /*===============================================================================
  *                       Macros Configuration References                         *
  ================================================================================*/
 
 
+/* @ref RCC Clock Source, System Clock Switch */
+#define RCC_HSI_CLK						(0x00000000UL)			/* 8Mhz */
+#define RCC_HSE_CLK						(0x00000001UL)			/* 4-16Mhz */
+#define RCC_PLL_CLK						(0x00000002UL)
+
+/* @ref HSE Clock Source */
+#define RCC_HSE_CRYSTAL						0		/* ByPass Is Disabled */
+#define RCC_HSE_RC							1		/* ByPass Is Enabled */
+
+/* @ref PLLSRC Clock Source */
+#define	RCC_PLLSRC_HSI_DIV2					0		/* PLLSRC Clock Source Is HSI Divided By 2 */
+#define	RCC_PLLSRC_PLLXTPRE					1		/* PLLSRC Clock Source Is PLLXTPRE */
+
+/* @ref PLLXTPRE Clock Source */
+#define RCC_PLLXTPRE_HSE_DIV1				0		/* PLLXTPRE Not Divides The HSE */
+#define RCC_PLLXTPRE_HSE_DIV2				1		/* PLLXTPRE Divides The HSE By 2 */
+
+/* @ref PLLMULL Value */
+#define RCC_PLLMULL_RESERVED				(0x00000000UL)	/* PLLSRC */
+#define RCC_PLLMULL_CLK4					(0x00000002UL)	/* PLLSRC x4 */
+#define RCC_PLLMULL_CLK5					(0x00000003UL)	/* PLLSRC x5 */
+#define RCC_PLLMULL_CLK6					(0x00000004UL)	/* PLLSRC x6 */
+#define RCC_PLLMULL_CLK7					(0x00000005UL)	/* PLLSRC x7 */
+#define RCC_PLLMULL_CLK8					(0x00000006UL)	/* PLLSRC x8 */
+#define RCC_PLLMULL_CLK9					(0x00000007UL)	/* PLLSRC x9 */
+#define RCC_PLLMULL_CLK6_HALF				(0x0000000DUL)	/* PLLSRC x6.5 */
+
+/* @ref AHB Prescaler */
+#define RCC_AHB_SYSCLK_DIV1					(0x00000000UL)	/* SYSCLK */
+#define RCC_AHB_SYSCLK_DIV2					(0x00000080UL)	/* SYSCLK Divided By 2 */
+#define RCC_AHB_SYSCLK_DIV4					(0x00000090UL)	/* SYSCLK Divided By 4 */
+#define RCC_AHB_SYSCLK_DIV8					(0x000000A0UL)	/* SYSCLK Divided By 8 */
+#define RCC_AHB_SYSCLK_DIV16				(0x000000B0UL)	/* SYSCLK Divided By 16 */
+#define RCC_AHB_SYSCLK_DIV64				(0x000000C0UL)	/* SYSCLK Divided By 64 */
+#define RCC_AHB_SYSCLK_DIV128				(0x000000D0UL)	/* SYSCLK Divided By 128 */
+#define RCC_AHB_SYSCLK_DIV256				(0x000000E0UL)	/* SYSCLK Divided By 256 */
+#define RCC_AHB_SYSCLK_DIV512				(0x000000F0UL)	/* SYSCLK Divided By 512 */
+
+/* @ref APB Prescaler */
+#define RCC_APB_HCLK_DIV1					(0x00000000UL)	/* AHBCLK */
+#define RCC_APB_HCLK_DIV2					(0x00000004UL)	/* AHBCLK Divided By 2 */
+#define RCC_APB_HCLK_DIV4					(0x00000005UL)	/* AHBCLK Divided By 4 */
+#define RCC_APB_HCLK_DIV8					(0x00000006UL)	/* AHBCLK Divided By 8 */
+#define RCC_APB_HCLK_DIV16					(0x00000007UL)	/* AHBCLK Divided By 16 */
+
 /*===============================================================================
- *           		   Clock/Reset Enable/Disable Macros 	 		             *
+ *           		    	   	   Generic Macros  		  	                     *
  ================================================================================*/
 
-/* AHB Bus Clock Enable*/
-#define RCC_DMA_CLK_EN()					(SET_BIT(RCC->AHBENR,0))
-#define RCC_SRAM_CLK_EN()					(SET_BIT(RCC->AHBENR,2))
+/*RCC Buses IDs*/
+#define RCC_AHB_BUS 					0
+#define RCC_APB1_BUS 					1
+#define RCC_APB2_BUS 					2
 
-/*APB1 Bus Clock Enable*/
-#define RCC_TIM2_CLK_EN()					(SET_BIT(RCC->APB1ENR,0))
-#define RCC_TIM3_CLK_EN()					(SET_BIT(RCC->APB1ENR,1))
-#define RCC_TIM4_CLK_EN()					(SET_BIT(RCC->APB1ENR,2))
-#define RCC_WWD_CLK_EN()					(SET_BIT(RCC->APB1ENR,11))
-#define RCC_SPI2_CLK_EN()					(SET_BIT(RCC->APB1ENR,14))
-#define RCC_USART2_CLK_EN()					(SET_BIT(RCC->APB1ENR,17))
-#define RCC_USART3_CLK_EN()					(SET_BIT(RCC->APB1ENR,18))
-#define RCC_I2C1_CLK_EN()					(SET_BIT(RCC->APB1ENR,21))
-#define RCC_I2C2_CLK_EN()					(SET_BIT(RCC->APB1ENR,22))
-#define RCC_USB_CLK_EN()					(SET_BIT(RCC->APB1ENR,23))
-#define RCC_CAN_CLK_EN()					(SET_BIT(RCC->APB1ENR,25))
-#define RCC_BKP_CLK_EN()					(SET_BIT(RCC->APB1ENR,27))
+/* RCC AHB Bus Peripheral's ID */
+#define RCC_DMA1_ID	   			        0
+#define RCC_DMA2_ID	          			1
+#define RCC_SRAM_ID           			2
+#define RCC_FLITF_ID	         		4
+#define RCC_CRC_ID		    		    6
+#define RCC_FSMC_ID	           			8
+#define RCC_SDIO_ID	           			10
 
-/*APB2 Bus Clock Enable*/
-#define RCC_AFIO_CLK_EN()					(SET_BIT(RCC->APB2ENR,0))
-#define RCC_GPIOA_CLK_EN()					(SET_BIT(RCC->APB2ENR,2))
-#define RCC_GPIOB_CLK_EN()					(SET_BIT(RCC->APB2ENR,3))
-#define RCC_GPIOC_CLK_EN()					(SET_BIT(RCC->APB2ENR,4))
-#define RCC_GPIOD_CLK_EN()					(SET_BIT(RCC->APB2ENR,5))
-#define RCC_GPIOE_CLK_EN()					(SET_BIT(RCC->APB2ENR,6))
-#define RCC_ADC1_CLK_EN()					(SET_BIT(RCC->APB2ENR,9))
-#define RCC_ADC2_CLK_EN()					(SET_BIT(RCC->APB2ENR,10))
-#define RCC_TIM1_CLK_EN()					(SET_BIT(RCC->APB2ENR,11))
-#define RCC_SPI1_CLK_EN()					(SET_BIT(RCC->APB2ENR,12))
-#define RCC_USART1_CLK_EN()					(SET_BIT(RCC->APB2ENR,14))
+/* RCC APB1 Bus Peripheral's ID */
+#define RCC_TIM2_ID	   			        0
+#define RCC_TIM3_ID	          			1
+#define RCC_TIM4_ID	           			2
+#define RCC_WWDG_ID	         			11
+#define RCC_SPI2_ID		    			14
+#define RCC_USART2_ID          			17
+#define RCC_USART3_ID          			18
+#define RCC_I2C1_ID	           			21
+#define RCC_I2C2_ID	           			22
+#define RCC_CAN_ID	           			25
+#define RCC_PKB_ID	           			27
 
-
-/*APB1 Bus Reset*/
-#define RCC_TIM2_RESET()					(SET_BIT(RCC->APB1RSTR,0))
-#define RCC_TIM3_RESET()					(SET_BIT(RCC->APB1RSTR,1))
-#define RCC_TIM4_RESET()					(SET_BIT(RCC->APB1RSTR,2))
-#define RCC_WWD_RESET()						(SET_BIT(RCC->APB1RSTR,11))
-#define RCC_SPI2_RESET()					(SET_BIT(RCC->APB1RSTR,14))
-#define RCC_USART2_RESET()					(SET_BIT(RCC->APB1RSTR,17))
-#define RCC_USART3_RESET()					(SET_BIT(RCC->APB1RSTR,18))
-#define RCC_I2C1_RESET()					(SET_BIT(RCC->APB1RSTR,21))
-#define RCC_I2C2_RESET()					(SET_BIT(RCC->APB1RSTR,22))
-#define RCC_USB_RESET()						(SET_BIT(RCC->APB1RSTR,23))
-#define RCC_CAN_RESET()						(SET_BIT(RCC->APB1RSTR,25))
-#define RCC_BKP_RESET()						(SET_BIT(RCC->APB1RSTR,27))
-
-/*APB2 Bus Reset*/
-#define RCC_AFIO_RESET()					(SET_BIT(RCC->APB2RSTR,0))
-#define RCC_GPIOA_RESET()					(SET_BIT(RCC->APB2RSTR,2))
-#define RCC_GPIOB_RESET()					(SET_BIT(RCC->APB2RSTR,3))
-#define RCC_GPIOC_RESET()					(SET_BIT(RCC->APB2RSTR,4))
-#define RCC_GPIOD_RESET()					(SET_BIT(RCC->APB2RSTR,5))
-#define RCC_GPIOE_RESET()					(SET_BIT(RCC->APB2RSTR,6))
-#define RCC_ADC1_RESET()					(SET_BIT(RCC->APB2RSTR,9))
-#define RCC_ADC2_RESET()					(SET_BIT(RCC->APB2RSTR,10))
-#define RCC_TIM1_RESET()					(SET_BIT(RCC->APB2RSTR,11))
-#define RCC_SPI1_RESET()					(SET_BIT(RCC->APB2RSTR,12))
-#define RCC_USART1_RESET()					(SET_BIT(RCC->APB2RSTR,14))
+/* RCC APB2 Bus Peripheral's ID */
+#define RCC_AFIO_ID	  			        0
+#define RCC_GPIOA_ID           			2
+#define RCC_GPIOB_ID           			3
+#define RCC_GPIOC_ID           			4
+#define RCC_GPIOD_ID           			5
+#define RCC_GPIOE_ID           			6
+#define RCC_ADC1_ID	           			9
+#define RCC_ADC2_ID	           			10
+#define RCC_TIM1_ID	           			11
+#define RCC_SPI1_ID	           			12
+#define RCC_USART1_ID          			14
 
 
 /*===============================================================================
  *                                	   APIs 		   		                     *
  ================================================================================*/
-
 /**===============================================================================
- * Function Name  : MCAL_RCC_initSysClk.
- * Brief          : Function To Initiate The System Clock.
- * Parameter (in) : .
- * Parameter (in) :.
+ * Function Name  : MCAL_RCC_initSYSClk.
+ * Brief          : Function To Initialize The SYSCLK Clock.
+ * Parameter (in) : None.
  * Return         : None.
  * Note           : None.																			*/
-void MCAL_RCC_initSysClk();
+void MCAL_RCC_initSYSClk(void);
+
+/**===============================================================================
+ * Function Name  : MCAL_RCC_enableCLK.
+ * Brief          : Function To Enable The Clock of Peripheral.
+ * Parameter (in) : Bus.
+ * Parameter (in) : Peripheral.
+ * Return         : None.
+ * Note           : None.																			*/
+void MCAL_RCC_enableCLK(uint8_t a_BusID, uint8_t a_PeriphID);
+
+/**===============================================================================
+ * Function Name  : MCAL_RCC_disableCLK.
+ * Brief          : Function To Disable The Clock of Peripheral.
+ * Parameter (in) : Bus.
+ * Parameter (in) : Peripheral.
+ * Return         : None.
+ * Note           : None.																			*/
+void MCAL_RCC_disableCLK(uint8_t a_BusID, uint8_t a_PeriphID);
+/**===============================================================================
+ * Function Name  : MCAL_RCC_reset.
+ * Brief          : Function To Reset The Peripheral.
+ * Parameter (in) : Bus.
+ * Parameter (in) : Peripheral.
+ * Return         : None.
+ * Note           : None.																			*/
+void MCAL_RCC_reset(void);
 
 
 #endif /* INC_STM32F103C8_RCC_DRIVER_H_ */

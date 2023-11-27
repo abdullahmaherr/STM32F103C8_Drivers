@@ -13,7 +13,9 @@
 /*===============================================================================
  *                                Includes                                       *
  ================================================================================*/
+#include "util.h"
 #include "stm32f103c8_rcc_driver.h"
+
 
 /*===============================================================================
  *                            		  MACROS	                                 *
@@ -22,7 +24,6 @@
 /*===============================================================================
  *                              Global Variables                                 *
  ================================================================================*/
-
 
 
 /*===============================================================================
@@ -34,3 +35,120 @@
 /*===============================================================================
  *                              API Definitions                                  *
  ================================================================================*/
+void MCAL_RCC_initSYSClk(void)
+{
+	/* Clear Default Value For Control Register */
+	RCC->CR = 0;
+
+	/* System Clock Switch*/
+	RCC->CFGR |= SYS_CLK_SRC;
+
+	/* AHB Prescaler */
+	(RCC->CFGR) |= AHB_CLK_PRESCALER;
+
+	/* APB1 Prescaler */
+	(RCC->CFGR) |= (APB_LOW_CLK_PRESCALER<<8);
+
+	/* APB2 Prescaler */
+	(RCC->CFGR) |= (APB_HIGH_CLK_PRESCALER<<11);
+
+#if SYS_CLK_SRC == RCC_HSI_CLK
+
+	/* Internal high-speed clock enable */
+	SET_BIT((RCC->CR),0);
+
+#elif SYS_CLK_SRC == RCC_HSE_CLK
+
+	/* ByPass Enable/Disable Regarding to HSE Clock Source */
+	WRI_BIT((RCC->CR),18,HSE_CLK_SRC);
+
+	/* Clock Security System Enable For HSE*/
+	SET_BIT((RCC->CR),19);
+
+	/* External high-speed clock enable */
+	SET_BIT((RCC->CR),16);
+
+#elif SYS_CLK_SRC == RCC_PLL_CLK
+
+	/* Select PLLSRC Clock Source Regarding to PLL_CLK_SRC */
+	WRI_BIT((RCC->CFGR),16,PLL_CLK_SRC);
+
+#if PLL_CLK_SRC == RCC_PLLSRC_PLLXTPRE
+
+	/* Select PLLXTPRE Clock Source Regarding to PLL_CLK_SRC */
+	WRI_BIT((RCC->CFGR),17,PLLXTPRE_CLK_SRC);
+
+	/* External high-speed clock enable */
+	SET_BIT((RCC->CR),16);
+
+#elif PLL_CLK_SRC == RCC_PLLSRC_HSI_DIV2
+
+	/* Internal high-speed clock enable */
+	SET_BIT((RCC->CR),0);
+
+#endif
+
+	/* Select PLLMUL Value */
+	(RCC->CFGR) |= (PLL_MULL<<18);
+
+	/* PLL clock enable */
+	SET_BIT((RCC->CR),24);
+
+#else
+
+#error("Your SYSCLK Is False")
+
+#endif
+
+}
+
+void MCAL_RCC_enableCLK(uint8_t a_BusID, uint8_t a_PeriphID)
+{
+	switch (a_BusID) {
+	case RCC_AHB_BUS:
+		(RCC->AHBENR) |= (1 << a_PeriphID);
+		break;
+	case RCC_APB1_BUS:
+		(RCC->APB1ENR) |= (1 << a_PeriphID);
+		break;
+	case RCC_APB2_BUS:
+		(RCC->APB2ENR) |= (1 << a_PeriphID);
+		break;
+	default:
+		break;
+	}
+}
+
+void MCAL_RCC_disableCLK(uint8_t a_BusID, uint8_t a_PeriphID)
+{
+	switch (a_BusID) {
+	case RCC_AHB_BUS:
+		(RCC->AHBENR) &= (~(1 << a_PeriphID));
+		break;
+	case RCC_APB1_BUS:
+		(RCC->APB1ENR) &= (~(1 << a_PeriphID));
+		break;
+	case RCC_APB2_BUS:
+		(RCC->APB2ENR) &= (~(1 << a_PeriphID));
+		break;
+	default:
+		break;
+	}
+}
+
+void MCAL_RCC_reset(uint8_t a_BusID, uint8_t a_PeriphID)
+{
+	switch (a_BusID) {
+	case RCC_AHB_BUS:
+		(RCC->AHBENR) |= (1 << a_PeriphID);
+		break;
+	case RCC_APB1_BUS:
+		(RCC->APB1ENR) |= (1 << a_PeriphID);
+		break;
+	case RCC_APB2_BUS:
+		(RCC->APB2ENR) |= (1 << a_PeriphID);
+		break;
+	default:
+		break;
+	}
+}
