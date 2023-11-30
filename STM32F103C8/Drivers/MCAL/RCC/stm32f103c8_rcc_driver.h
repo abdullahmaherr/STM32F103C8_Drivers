@@ -32,7 +32,8 @@
 /* Configure PLL if SYSCLK SRC Is PLL */
 #define PLL_CLK_SRC					RCC_PLLSRC_HSI_DIV2		/* Specifies The PLLSRC Clock Source According to @ref PLLSRC Clock Source */
 #define PLLXTPRE_CLK_SRC			RCC_PLLXTPRE_HSE_DIV1	/* Specifies The PLLXTPRE Clock Source According to @ref PLLXTPRE Clock Source */
-#define PLL_MULL					RCC_PLLMULL_RESERVED	/* Specifies The PLLMULL Value According to @ref PLLMULL Value */
+#define PLL_MULL					RCC_PLLMULL_CLK2	/* Specifies The PLLMULL Value According to @ref PLLMULL Value */
+															/* Caution: The PLL Output Frequency Must Not Exceed 72 MHz. */
 
 /* Configure AHB Prescaler */
 #define AHB_CLK_PRESCALER			RCC_AHB_SYSCLK_DIV1		/* Specifies The AHB Prescaler According to @ref AHB Prescaler */
@@ -65,15 +66,22 @@
 #define RCC_PLLXTPRE_HSE_DIV1				0		/* PLLXTPRE Not Divides The HSE */
 #define RCC_PLLXTPRE_HSE_DIV2				1		/* PLLXTPRE Divides The HSE By 2 */
 
-/* @ref PLLMULL Value */
-#define RCC_PLLMULL_RESERVED				(0x00000000UL)	/* PLLSRC */
+/* @ref PLLMULL Value */ /* Caution: The PLL Output Frequency Must Not Exceed 72 MHz. */
+#define RCC_PLLMULL_CLK2					(0x00000000UL)	/* PLLSRC x2 */
+#define RCC_PLLMULL_CLK3					(0x00000001UL)	/* PLLSRC x3 */
 #define RCC_PLLMULL_CLK4					(0x00000002UL)	/* PLLSRC x4 */
 #define RCC_PLLMULL_CLK5					(0x00000003UL)	/* PLLSRC x5 */
 #define RCC_PLLMULL_CLK6					(0x00000004UL)	/* PLLSRC x6 */
 #define RCC_PLLMULL_CLK7					(0x00000005UL)	/* PLLSRC x7 */
 #define RCC_PLLMULL_CLK8					(0x00000006UL)	/* PLLSRC x8 */
 #define RCC_PLLMULL_CLK9					(0x00000007UL)	/* PLLSRC x9 */
-#define RCC_PLLMULL_CLK6_HALF				(0x0000000DUL)	/* PLLSRC x6.5 */
+#define RCC_PLLMULL_CLK10					(0x00000008UL)	/* PLLSRC x10 */
+#define RCC_PLLMULL_CLK11					(0x00000009UL)	/* PLLSRC x11 */
+#define RCC_PLLMULL_CLK12					(0x0000000AUL)	/* PLLSRC x12 */
+#define RCC_PLLMULL_CLK13					(0x0000000BUL)	/* PLLSRC x13 */
+#define RCC_PLLMULL_CLK14					(0x0000000CUL)	/* PLLSRC x14 */
+#define RCC_PLLMULL_CLK15					(0x0000000DUL)	/* PLLSRC x15 */
+#define RCC_PLLMULL_CLK16					(0x0000000EUL)	/* PLLSRC x16 */
 
 /* @ref AHB Prescaler */
 #define RCC_AHB_SYSCLK_DIV1					(0x00000000UL)	/* SYSCLK */
@@ -173,7 +181,7 @@ void MCAL_RCC_disableCLK(uint8_t a_BusID, uint8_t a_PeriphID);
  * Parameter (in) : Peripheral.
  * Return         : None.
  * Note           : None.																			*/
-void MCAL_RCC_reset(void);
+void MCAL_RCC_reset(uint8_t a_BusID, uint8_t a_PeriphID);
 
 
 #endif /* INC_STM32F103C8_RCC_DRIVER_H_ */
