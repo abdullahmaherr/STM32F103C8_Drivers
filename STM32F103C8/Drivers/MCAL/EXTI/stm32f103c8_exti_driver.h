@@ -23,11 +23,11 @@
 /*===============================================================================
  *                            User Type Definitions                              *
  ================================================================================*/
-typedef struct
+typedef struct /* Static Configuration in EXTI_PinConfig_t To Limit Configuration Error */
 {
 	uint8_t EXTI_LineNumber; /* The EXTI Line Number */
 
-	GPIO_TypeDef * GPIOx; /* The GPIO Port Used In EXTI */
+	GPIO_TypeDef * GPIOx; 	/* The GPIO Port Used In EXTI */
 
 	uint8_t GPIO_PinNumber; /* The GPIO PIN Number Used In EXTI */
 
@@ -38,13 +38,15 @@ typedef struct
 
 typedef struct
 {
-	EXTI_GPIO_MAPPING_t EXTIx_Pin; /* Specifies The Required EXTI According to @ref EXTI_DEFINE */
+	EXTI_GPIO_MAPPING_t EXTIx_Pin; 	  /* Specifies The Required EXTI According to @ref EXTI_DEFINE */
 
-	uint8_t Trigger_Case; /* Specifies The Trigger Case According to @ref EXTI_TRIGGER_SELECT_DEFINE */
+	uint8_t EXTI_TriggerCase;		  /* Specifies The Trigger Case According to @ref EXTI_TRIGGER_SELECT_DEFINE */
 
-	uint8_t Mask_Enable; /* Specifies ENABLE/DISABLE interrupt According to @ref EXTI_IRQ_DEFINE
-						  ENABLE/DISABLE EXTI Interrupt Mask Register (EXTI_IMR) also The NVIC */
-	void(*p_IRQ_CallBack)(void); /* SET The C Function Which will Be Called If IRQ Enabled*/
+	uint8_t EXTI_IRQ; 				  /* Specifies ENABLE/DISABLE interrupt According to @ref EXTI_IRQ_DEFINE
+										 ENABLE/DISABLE EXTI Interrupt Mask Register (EXTI_IMR) also The NVIC */
+
+	void(*p_EXTI_ISR_CallBack)(void); /* SET The C Function Which will Be Called If IRQ Enabled*/
+
 }EXTI_PinConfig_t;
 
 
@@ -178,6 +180,11 @@ typedef struct
 /* @ref EXTI_IRQ_DEFINE */
 #define EXTI_IRQ_DISABLE					0
 #define EXTI_IRQ_ENABLE						1
+
+
+/*===============================================================================
+ *           		    	   	   Generic Macros  		  	                     *
+ ================================================================================*/
 
 /*Configuration Reference*/
 #define EXTI0		0

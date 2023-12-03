@@ -26,7 +26,7 @@
  *                              Global Variables                                 *
  ================================================================================*/
 /* Array of 15 Pointer To Function */
-void (* gp_IRQ_CallBack[15])(void);
+void (* gp_EXTI_ISR_CallBack[15])(void);
 
 /*===============================================================================
  *                        Private Function Prototypes	   		                 *
@@ -76,14 +76,14 @@ void MCAL_EXTI_GPIO_DeInit()
 	EXTI->SWIER = 0x00000000;
 	EXTI->PR = 0xFFFFFFFF;  /* This Register's bits are cleared by writing a ‘1’ into the bits */
 
-	/* Disable All IRQ From NVIC*/
+	/* Disable All IRQ From NVCI*/
 	NVIC_EXTI0_DI();
 	NVIC_EXTI1_DI();
 	NVIC_EXTI2_DI();
 	NVIC_EXTI3_DI();
 	NVIC_EXTI4_DI();
 	NVIC_EXTI9_5_DI();
-	NVIC_IRQ15_10_DI();
+	NVIC_EXTI15_10_DI();
 }
 
 
@@ -121,16 +121,16 @@ static void EXTI_initUpdate(EXTI_PinConfig_t *p_EXTI_Config)
 	CLEAR_BIT((EXTI->RTSR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
 	CLEAR_BIT((EXTI->FTSR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
 
-	if(p_EXTI_Config->Trigger_Case == EXTI_RISING_TRIG)
+	if(p_EXTI_Config->EXTI_TriggerCase == EXTI_RISING_TRIG)
 	{
 		/*Set Raising Enable Bit*/
 		SET_BIT((EXTI->RTSR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
 
-	}else if(p_EXTI_Config->Trigger_Case == EXTI_FALLING_TRIG)
+	}else if(p_EXTI_Config->EXTI_TriggerCase == EXTI_FALLING_TRIG)
 	{
 		/*Set Falling Enable Bit*/
 		SET_BIT((EXTI->FTSR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
-	}else if(p_EXTI_Config->Trigger_Case == EXTI_RISING_FALLING_TRIG)
+	}else if(p_EXTI_Config->EXTI_TriggerCase == EXTI_RISING_FALLING_TRIG)
 	{
 		/*Set Both Falling and Raising Bits*/
 		SET_BIT((EXTI->RTSR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
@@ -138,14 +138,14 @@ static void EXTI_initUpdate(EXTI_PinConfig_t *p_EXTI_Config)
 	}
 
 	/* Enable Or Disable The IRQ in EXTI(MASK) and NVIC */
-	if(p_EXTI_Config->Mask_Enable == EXTI_IRQ_ENABLE)
+	if(p_EXTI_Config->EXTI_IRQ == EXTI_IRQ_ENABLE)
 	{
 		/*Enable Interrupt MASK Bit*/
 		SET_BIT((EXTI->IMR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
 		/* Enable IRQ from EXTI*/
 		NVIC_enable(p_EXTI_Config->EXTIx_Pin.IVT_IRQ_Number);
 
-	}else if(p_EXTI_Config->Mask_Enable == EXTI_IRQ_DISABLE)
+	}else if(p_EXTI_Config->EXTI_IRQ == EXTI_IRQ_DISABLE)
 	{
 		/*Disable Interrupt MASK Bit*/
 		CLEAR_BIT((EXTI->IMR),(p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber));
@@ -154,7 +154,7 @@ static void EXTI_initUpdate(EXTI_PinConfig_t *p_EXTI_Config)
 	}
 
 	/* Set The Interrupt Handling Callback Function  */
-	gp_IRQ_CallBack[p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber] = p_EXTI_Config->p_IRQ_CallBack;
+	gp_EXTI_ISR_CallBack[p_EXTI_Config->EXTIx_Pin.EXTI_LineNumber] = p_EXTI_Config->p_EXTI_ISR_CallBack;
 }
 
 
@@ -168,7 +168,7 @@ static void NVIC_enable(uint8_t a_IRQ)
 	case EXTI3_IRQ: NVIC_EXTI3_EN();		break;
 	case EXTI4_IRQ: NVIC_EXTI4_EN();		break;
 	case EXTI5_IRQ: NVIC_EXTI9_5_EN();		break;
-	case EXTI10_IRQ: NVIC_IRQ15_10_EN();	break;
+	case EXTI10_IRQ: NVIC_EXTI15_10_EN();	break;
 	}
 }
 
@@ -183,7 +183,7 @@ static void NVIC_disable(uint8_t a_IRQ)
 	case EXTI3_IRQ: NVIC_EXTI3_DI();		break;
 	case EXTI4_IRQ: NVIC_EXTI4_DI();		break;
 	case EXTI5_IRQ: NVIC_EXTI9_5_DI();		break;
-	case EXTI10_IRQ: NVIC_IRQ15_10_DI();	break;
+	case EXTI10_IRQ: NVIC_EXTI15_10_DI();	break;
 	}
 }
 
@@ -196,40 +196,40 @@ void EXTI0_IRQHandler(void)
 {
 	/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 	SET_BIT(EXTI->PR,EXTI0);
-	/* Call The IRQ CallBack Function */
-	(*gp_IRQ_CallBack[0])();
+	/* Call The ISR CallBack Function */
+	(*gp_EXTI_ISR_CallBack[0])();
 }
 
 void EXTI1_IRQHandler(void)
 {
 	/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 	SET_BIT(EXTI->PR,EXTI1);
-	/* Call The IRQ CallBack Function */
-	(*gp_IRQ_CallBack[1])();
+	/* Call The ISR CallBack Function */
+	(*gp_EXTI_ISR_CallBack[1])();
 }
 
 void EXTI2_IRQHandler(void)
 {
 	/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 	SET_BIT(EXTI->PR,EXTI2);
-	/* Call The IRQ CallBack Function */
-	(*gp_IRQ_CallBack[2])();
+	/* Call The ISR CallBack Function */
+	(*gp_EXTI_ISR_CallBack[2])();
 }
 
 void EXTI3_IRQHandler(void)
 {
 	/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 	SET_BIT(EXTI->PR,EXTI3);
-	/* Call The IRQ CallBack Function */
-	(*gp_IRQ_CallBack[3])();
+	/* Call The ISR CallBack Function */
+	(*gp_EXTI_ISR_CallBack[3])();
 }
 
 void EXTI4_IRQHandler(void)
 {
 	/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 	SET_BIT(EXTI->PR,EXTI4);
-	/* Call The IRQ CallBack Function */
-	(*gp_IRQ_CallBack[4])();
+	/* Call The ISR CallBack Function */
+	(*gp_EXTI_ISR_CallBack[4])();
 }
 
 void EXTI9_5_IRQHandler(void)
@@ -238,32 +238,32 @@ void EXTI9_5_IRQHandler(void)
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI5);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[5])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[5])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI6))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI6);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[6])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[6])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI7))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI7);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[7])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[7])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI8))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI8);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[8])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[8])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI9))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI9);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[9])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[9])();
 	}
 }
 
@@ -273,38 +273,38 @@ void EXTI15_10_IRQHandler(void)
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI10);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[10])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[10])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI11))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI11);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[11])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[11])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI12))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI12);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[12])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[12])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI13))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI13);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[13])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[13])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI14))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI14);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[14])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[14])();
 	}else if(BIT_IS_SET(EXTI->PR,EXTI15))
 	{
 		/* Clear The Pending Bit By Writing a ‘1’ Into The BiT */
 		SET_BIT(EXTI->PR,EXTI15);
-		/* Call The IRQ CallBack Function */
-		(*gp_IRQ_CallBack[15])();
+		/* Call The ISR CallBack Function */
+		(*gp_EXTI_ISR_CallBack[15])();
 	}
 }
 
