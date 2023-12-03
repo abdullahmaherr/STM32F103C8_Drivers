@@ -29,10 +29,13 @@ typedef struct
 	uint8_t GPIO_Mode;        /* Specifies The GPIOx Pin Mode According to @ref GPIO_PIN_MODE_DEFINE */
 
 	uint8_t GPIO_Output_Speed;/* Specifies The GPIOx Pin Output Speed According to @ref GPIO_PIN_OUTPUT_SPEED_DEFINE */
+
 }GPIO_PinConfig_t;
+
 /*===============================================================================
  *                       Macros Configuration References                         *
  ================================================================================*/
+
 				/*	@ref GPIO_PIN_NUMBER_DEFINE */
 #define GPIO_PIN0								(0)
 #define GPIO_PIN1								(1)
@@ -51,9 +54,6 @@ typedef struct
 #define GPIO_PIN14								(14)
 #define GPIO_PIN15								(15)
 
-#define GPIO_PIN_ALL						((uint16_t)0xFFFF)
-#define GPIO_PIN_MASK						(0x0000FFFFU)
-
 
                /*  @ref GPIO_PIN_MODE_DEFINE*/
 #define GPIO_MODE_INPUT_ANALOG						(0x00U)/* 00: Analog mode*/
@@ -64,8 +64,7 @@ typedef struct
 #define GPIO_MODE_OUTPUT_OPENDRAIN					(0x05U)/* 01: General purpose output Open-drain*/
 #define GPIO_MODE_OUTPUT_AF_PUSHPULL				(0x06U)/* 10: Alternate function output Push-pull*/
 #define GPIO_MODE_OUTPUT_AF_OPENDRAIN				(0x07U)/* 11: Alternate function output Open-drain*/
-
-#define GPIO_MODE_INPUT_AF							(0x08U)/* For alternate function inputs, the port must be configured in Input mode (floating, pullup or pull-down) and the input pin must be driven externally*/
+#define GPIO_MODE_INPUT_AF_FLOATING					(0x08U)/* For alternate function inputs, the port must be configured in Input mode (floating, pullup or pull-down) and the input pin must be driven externally*/
 
               /*  @ref GPIO_PIN_OUTPUT_SPEED_DEFINE */
 /*00: Input mode (reset state)

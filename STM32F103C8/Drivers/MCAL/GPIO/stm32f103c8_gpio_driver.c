@@ -46,7 +46,7 @@ static uint8_t GET_PIN_POSITION(uint8_t a_PinNumber);
 
 void MCAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_PinConfig_t* p_PinConfig)
 {
-	volatile uint32_t* CRHL = NULL_PTR;
+	vuint32_t* CRHL = NULL_PTR;
 	uint8_t tempPinConfig = 0;/*Temporary Variable to Assign CRHL by (MODE + CNF) Bits*/
 
 	/*Specifies Which Configuration Register Will Be Used (CRL 0>>>7) Or (CRH 8>>>15)*/
@@ -63,7 +63,7 @@ void MCAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_PinConfig_t* p_PinConfig)
 	}
 	else/*Else The Pin Is INPUT*/
 	{
-		if((p_PinConfig->GPIO_Mode == GPIO_MODE_INPUT_FLOATING) || (p_PinConfig->GPIO_Mode == GPIO_MODE_INPUT_AF))
+		if((p_PinConfig->GPIO_Mode == GPIO_MODE_INPUT_FLOATING) || (p_PinConfig->GPIO_Mode == GPIO_MODE_INPUT_AF_FLOATING))
 		{
 			/*CNFy[1:0] = 01: Floating input*/
 			tempPinConfig = ( (((GPIO_MODE_INPUT_FLOATING) <<2) | 0x0 ) & 0x0F );

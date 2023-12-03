@@ -17,7 +17,6 @@
 /*===============================================================================
  *                                Includes                                       *
  ================================================================================*/
-
 #include"stdlib.h"
 #include "util.h"
 #include"std_types.h"
@@ -35,7 +34,7 @@
 
 #define CORTEX_M3_INTENRAL_PERIPHERALS_BASE			0X08000000UL
 
-/***********************************NVIC******************************/
+/************************************NVIC**************************************/
 #define NVIC_BASE									0xE000E100UL
 
 #define NVIC_ISER0						*((vuint32_t*)(NVIC_BASE + 0x00))
@@ -56,7 +55,9 @@
 
 /********************************APB1 Bus Peripherals******************************/
 
+/*USART*/
 #define USART2_BASE									0x40004400UL
+#define USART3_BASE									0x40004800UL
 /********************************APB2 Bus Peripherals******************************/
 
 /*GPIO*/ /*Note That in LQFP48 GPIOA and GPIOB are fully included, GPIOC and GPIOD Partially Included, GPIOE Not Included*/
@@ -71,6 +72,10 @@
 
 /*AFIO*/
 #define AFIO_BASE									0x40010000UL
+
+/*USART*/
+#define USART1_BASE									0x40013800UL
+
 /*===============================================================================
  *            	   				Peripheral Registers                             *
  ================================================================================*/
@@ -122,6 +127,18 @@ typedef struct
 	vuint32_t PR;
 }EXTI_TypeDef;
 
+/*USART*/
+typedef struct
+{
+	vuint32_t SR;
+	vuint32_t DR;
+	vuint32_t BRR;
+	vuint32_t CR1;
+	vuint32_t CR2;
+	vuint32_t CR3;
+	vuint32_t GTPR;
+}USART_TypeDef;
+
 /*===============================================================================
  *            	   				Peripheral Instants                              *
  ================================================================================*/
@@ -141,6 +158,11 @@ typedef struct
 /*EXTI*/
 #define EXTI						((EXTI_TypeDef *)(EXTI_BASE))
 
+/*USART*/
+#define USART1						((USART_TypeDef *)(USART1_BASE))
+#define USART2						((USART_TypeDef *)(USART2_BASE))
+#define USART3						((USART_TypeDef *)(USART3_BASE))
+
 /*===============================================================================
  *           		   		NVIC IRQ Enable/Disable Macros 	 		             *
  ================================================================================*/
@@ -152,7 +174,13 @@ typedef struct
 #define NVIC_EXTI3_EN()					(SET_BIT(NVIC_ISER0,EXTI3_IRQ))
 #define NVIC_EXTI4_EN()					(SET_BIT(NVIC_ISER0,EXTI4_IRQ))
 #define NVIC_EXTI9_5_EN()				(SET_BIT(NVIC_ISER0,EXTI5_IRQ))
-#define NVIC_IRQ15_10_EN()				(SET_BIT(NVIC_ISER1,(EXTI10_IRQ-32)))
+#define NVIC_EXTI15_10_EN()				(SET_BIT(NVIC_ISER1,(EXTI10_IRQ-32)))
+
+#define NVIC_USART1_EN()				(SET_BIT(NVIC_ISER1,(USART1_IRQ-32)))
+#define NVIC_USART2_EN()				(SET_BIT(NVIC_ISER1,(USART2_IRQ-32)))
+#define NVIC_USART3_EN()				(SET_BIT(NVIC_ISER1,(USART3_IRQ-32)))
+
+
 
 /* Disable Interrupt Request */
 #define NVIC_EXTI0_DI()					(SET_BIT(NVIC_ISER0,EXTI0_IRQ))
@@ -161,7 +189,11 @@ typedef struct
 #define NVIC_EXTI3_DI()					(SET_BIT(NVIC_ICER0,EXTI3_IRQ))
 #define NVIC_EXTI4_DI()					(SET_BIT(NVIC_ICER0,EXTI4_IRQ))
 #define NVIC_EXTI9_5_DI()				(SET_BIT(NVIC_ICER0,EXTI5_IRQ))
-#define NVIC_IRQ15_10_DI()				(SET_BIT(NVIC_ICER1,(EXTI10_IRQ-32)))
+#define NVIC_EXTI15_10_DI()				(SET_BIT(NVIC_ICER1,(EXTI10_IRQ-32)))
+
+#define NVIC_USART1_DI()				(SET_BIT(NVIC_ICER1,(USART1_IRQ-32)))
+#define NVIC_USART2_DI()				(SET_BIT(NVIC_ICER1,(USART2_IRQ-32)))
+#define NVIC_USART3_DI()				(SET_BIT(NVIC_ICER1,(USART3_IRQ-32)))
 
 
 /*===============================================================================
@@ -186,17 +218,13 @@ typedef struct
 #define EXTI14_IRQ							40
 #define EXTI15_IRQ							40
 
+/*USART*/
+#define USART1_IRQ							37
+#define USART2_IRQ							38
+#define USART3_IRQ							39
 
 
 
-
-
-/*===============================================================================
- *           		    	   	   Generic Macros  		  	                     *
- ================================================================================*/
-
-#define LOGIC_HIGH 	(1u)
-#define LOGIC_LOW 	(0u)
 
 
 #endif /* INC_STM32F103C8_H_ */

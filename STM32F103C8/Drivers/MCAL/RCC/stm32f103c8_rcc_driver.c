@@ -112,13 +112,13 @@ void MCAL_RCC_enableCLK(uint8_t a_BusID, uint8_t a_PeriphID)
 {
 	switch (a_BusID) {
 	case RCC_AHB_BUS:
-		(RCC->AHBENR) |= (1 << a_PeriphID);
+		SET_BIT((RCC->AHBENR),(a_PeriphID));
 		break;
 	case RCC_APB1_BUS:
-		(RCC->APB1ENR) |= (1 << a_PeriphID);
+		SET_BIT((RCC->APB1ENR),(a_PeriphID));
 		break;
 	case RCC_APB2_BUS:
-		(RCC->APB2ENR) |= (1 << a_PeriphID);
+		SET_BIT((RCC->APB2ENR),(a_PeriphID));
 		break;
 	default:
 		break;
@@ -129,13 +129,13 @@ void MCAL_RCC_disableCLK(uint8_t a_BusID, uint8_t a_PeriphID)
 {
 	switch (a_BusID) {
 	case RCC_AHB_BUS:
-		(RCC->AHBENR) &= (~(1 << a_PeriphID));
+		CLEAR_BIT((RCC->AHBENR),(a_PeriphID));
 		break;
 	case RCC_APB1_BUS:
-		(RCC->APB1ENR) &= (~(1 << a_PeriphID));
+		CLEAR_BIT((RCC->APB1ENR),(a_PeriphID));
 		break;
 	case RCC_APB2_BUS:
-		(RCC->APB2ENR) &= (~(1 << a_PeriphID));
+		CLEAR_BIT((RCC->APB2ENR),(a_PeriphID));
 		break;
 	default:
 		break;
@@ -145,14 +145,13 @@ void MCAL_RCC_disableCLK(uint8_t a_BusID, uint8_t a_PeriphID)
 void MCAL_RCC_reset(uint8_t a_BusID, uint8_t a_PeriphID)
 {
 	switch (a_BusID) {
-	case RCC_AHB_BUS:
-		(RCC->AHBENR) |= (1 << a_PeriphID);
-		break;
 	case RCC_APB1_BUS:
-		(RCC->APB1ENR) |= (1 << a_PeriphID);
+		SET_BIT((RCC->APB1RSTR),(a_PeriphID));
+		CLEAR_BIT((RCC->APB1RSTR),(a_PeriphID));
 		break;
 	case RCC_APB2_BUS:
-		(RCC->APB2ENR) |= (1 << a_PeriphID);
+		SET_BIT((RCC->APB2RSTR),(a_PeriphID));
+		CLEAR_BIT((RCC->APB2RSTR),(a_PeriphID));
 		break;
 	default:
 		break;
