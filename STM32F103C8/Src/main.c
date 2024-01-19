@@ -16,13 +16,65 @@
  *
  ******************************************************************************
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "stm32f103c8.h"
+#include "stm32f103c8_rcc_driver.h"
 #include "stm32f103c8_gpio_driver.h"
 #include "stm32f103c8_exti_driver.h"
-#include "lcd.h"
-#include "keypad.h"
+#include "stm32f103c8_usart_driver.h"
+
+#include "core_cm3.h"
+
+vuint16_t buffer = 0;
+static vuint32_t g_TickCounter = 0;
+
+void SysTick_Handler(void)
+{
+	++g_TickCounter;
+}
+
+static void delay_ms(uint32_t delay)
+{
+	uint32_t currentCounter = g_TickCounter;
+	while((g_TickCounter - currentCounter) < delay);
+}
+
+void USART1_ISR(void)
+{
+	MCAL_USART_ReceiveData(USART1, &buffer, POLLING_DISABLED);
+	MCAL_USART_TransmitData(USART1, &buffer, POLLING_DISABLED);
+}
+
+void systemInit(void)
+{
+	//	SysTick_Config((uint32_t)8000);/* For The Delay Function */
+
+	MCAL_RCC_initSYSClk();
+
+	MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_GPIOA_ID);
+
+}
 
 int main(void)
 {
-    /* Loop forever */
-	for(;;);
+
+	USART_Config_t config;
+	config.USART_Mode = USART_MODE_TXRX;
+	config.USART_WordLength = USART_Word_Length_9BITS;
+	config.USART_ParityBit = USART_PARITY_BIT_NONE;
+	config.USART_StopBits = USART_STOP_BIT_1;
+	config.USART_FlowControl = USART_FLOW_CONTROL_NONE;
+	config.USART_IRQ = USART_IRQ_ENABLE_RXNE | USART_IRQ_ENABLE_TXE;
+	config.p_USART_ISR = USART1_ISR;
+	MCAL_USART_Init(USART1, &config);
+
+	systemInit();
+
+	/* Loop forever */
+	while(1)
+	{
+	}
 }
