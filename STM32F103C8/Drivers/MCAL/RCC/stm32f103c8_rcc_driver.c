@@ -25,6 +25,9 @@
  *                              Global Variables                                 *
  ================================================================================*/
 
+const uint8_t APBPrescaler[8U] = {0,0,0,0,1,2,3,4}; /* For Every Shift Right Multiply by 2 */
+
+const uint8_t AHBPrescaler[16U] = {0,0,0,0,0,0,0,0,1,2,3,4,6,7,8,9}; /* For Every Shift Right Multiply by 2 */
 
 /*===============================================================================
  *                          Private Function Prototypes	   		                 *
@@ -156,4 +159,41 @@ void MCAL_RCC_reset(uint8_t a_BusID, uint8_t a_PeriphID)
 	default:
 		break;
 	}
+}
+
+uint32_t MCAL_RCC_getSYSCLK(void)
+{
+	switch (((RCC->CFGR >> 2) & 0b11))/* Read System clock switch status */
+	{
+	case RCC_HSI_CLK:
+		return RCC_HSI_CLK_VAL; /* Return HSI Clock Frequency Value */
+		break;
+	case RCC_HSE_CLK:
+		return RCC_HSE_CLK_VAL;/* To Do */ /* Return HSE Clock Frequency Value */
+		break;
+	case RCC_PLL_CLK:
+		return RCC_PLL_CLK_VAL;/* To Do */  /* Return PLL Clock Frequency Value */
+		break;
+	default:
+		return 0;
+		break;
+	}
+}
+
+uint32_t MCAL_RCC_getHCLK(void)
+{
+	/* Divide System Clock Frequency by AHB Prescaler Value */
+	return(MCAL_RCC_getSYSCLK() >> AHBPrescaler[((RCC->CFGR >> 4) & 0b1111)]);
+}
+
+uint32_t MCAL_RCC_GetPCLK1(void)
+{
+	/* Divide AHB Clock Frequency by APB1 Prescaler Value */
+	return(MCAL_RCC_getHCLK() >> APBPrescaler[((RCC->CFGR >> 8) & 0b111)]);
+}
+
+uint32_t MCAL_RCC_GetPCLK2(void)
+{
+	/* Divide AHB Clock Frequency by APB2 Prescaler Value */
+	return(MCAL_RCC_getHCLK() >> APBPrescaler[((RCC->CFGR >> 11) & 0b111)]);
 }

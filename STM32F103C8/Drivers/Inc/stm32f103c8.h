@@ -24,7 +24,7 @@
 
 
 /*===============================================================================
- *            	    	  Base addresses for Memories                            *
+ *            	    	  Base Addresses For Memories                            *
  ================================================================================*/
 #define FLASH_MEMORY_BASE							0X08000000UL
 #define SYSTEM_MEMORY_BASE							0X1FFFF000UL
@@ -33,6 +33,10 @@
 #define PERIPHERALS_BASE							0X08000000UL
 
 #define CORTEX_M3_INTENRAL_PERIPHERALS_BASE			0X08000000UL
+
+/*===============================================================================
+ *            	   	  Base Addresses For Core Peripherals                         *
+ ================================================================================*/
 
 /************************************NVIC**************************************/
 #define NVIC_BASE									0xE000E100UL
@@ -46,7 +50,7 @@
 
 
 /*===============================================================================
- *            	   	  Base addresses for BUS Peripherals                         *
+ *            	   	  Base Addresses For MCU Peripherals                         *
  ================================================================================*/
 
 /********************************AHB Bus Peripherals******************************/
@@ -79,6 +83,7 @@
 /*===============================================================================
  *            	   				Peripheral Registers                             *
  ================================================================================*/
+
 /*RCC*/
 typedef struct
 {
@@ -142,6 +147,7 @@ typedef struct
 /*===============================================================================
  *            	   				Peripheral Instants                              *
  ================================================================================*/
+
 /*RCC*/
 #define RCC							((RCC_TypeDef *)(RCC_BASE))
 
@@ -183,7 +189,7 @@ typedef struct
 
 
 /* Disable Interrupt Request */
-#define NVIC_EXTI0_DI()					(SET_BIT(NVIC_ISER0,EXTI0_IRQ))
+#define NVIC_EXTI0_DI()					(SET_BIT(NVIC_ICER0,EXTI0_IRQ))
 #define NVIC_EXTI1_DI()					(SET_BIT(NVIC_ICER0,EXTI1_IRQ))
 #define NVIC_EXTI2_DI()					(SET_BIT(NVIC_ICER0,EXTI2_IRQ))
 #define NVIC_EXTI3_DI()					(SET_BIT(NVIC_ICER0,EXTI3_IRQ))

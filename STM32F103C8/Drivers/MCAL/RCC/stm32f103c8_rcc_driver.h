@@ -24,7 +24,7 @@
  *                            User Type Definitions                              *
  ================================================================================*/
 /* Configure System Clock Switch */
-#define SYS_CLK_SRC					RCC_PLL_CLK    		/* Specifies The Clock Source According to @ref RCC Clock Source */
+#define SYS_CLK_SRC					RCC_HSI_CLK    		/* Specifies The Clock Source According to @ref RCC Clock Source */
 
 /* Configure HSE if SYSCLK SRC Is HSE */
 #define HSE_CLK_SRC					RCC_HSE_CRYSTAL		/* Specifies The HSE Clock Source According to @ref HSE Clock Source */
@@ -67,43 +67,49 @@
 #define RCC_PLLXTPRE_HSE_DIV2				1		/* PLLXTPRE Divides The HSE By 2 */
 
 /* @ref PLLMULL Value */ /* Caution: The PLL Output Frequency Must Not Exceed 72 MHz. */
-#define RCC_PLLMULL_CLK2					(0x00000000UL)	/* PLLSRC x2 */
-#define RCC_PLLMULL_CLK3					(0x00000001UL)	/* PLLSRC x3 */
-#define RCC_PLLMULL_CLK4					(0x00000002UL)	/* PLLSRC x4 */
-#define RCC_PLLMULL_CLK5					(0x00000003UL)	/* PLLSRC x5 */
-#define RCC_PLLMULL_CLK6					(0x00000004UL)	/* PLLSRC x6 */
-#define RCC_PLLMULL_CLK7					(0x00000005UL)	/* PLLSRC x7 */
-#define RCC_PLLMULL_CLK8					(0x00000006UL)	/* PLLSRC x8 */
-#define RCC_PLLMULL_CLK9					(0x00000007UL)	/* PLLSRC x9 */
-#define RCC_PLLMULL_CLK10					(0x00000008UL)	/* PLLSRC x10 */
-#define RCC_PLLMULL_CLK11					(0x00000009UL)	/* PLLSRC x11 */
-#define RCC_PLLMULL_CLK12					(0x0000000AUL)	/* PLLSRC x12 */
-#define RCC_PLLMULL_CLK13					(0x0000000BUL)	/* PLLSRC x13 */
-#define RCC_PLLMULL_CLK14					(0x0000000CUL)	/* PLLSRC x14 */
-#define RCC_PLLMULL_CLK15					(0x0000000DUL)	/* PLLSRC x15 */
-#define RCC_PLLMULL_CLK16					(0x0000000EUL)	/* PLLSRC x16 */
+#define RCC_PLLMULL_CLK2					((uint32_t)0x00000000)	/* PLLSRC x2 */
+#define RCC_PLLMULL_CLK3					((uint32_t)0x00000001)	/* PLLSRC x3 */
+#define RCC_PLLMULL_CLK4					((uint32_t)0x00000002)	/* PLLSRC x4 */
+#define RCC_PLLMULL_CLK5					((uint32_t)0x00000003)	/* PLLSRC x5 */
+#define RCC_PLLMULL_CLK6					((uint32_t)0x00000004)	/* PLLSRC x6 */
+#define RCC_PLLMULL_CLK7					((uint32_t)0x00000005)	/* PLLSRC x7 */
+#define RCC_PLLMULL_CLK8					((uint32_t)0x00000006)	/* PLLSRC x8 */
+#define RCC_PLLMULL_CLK9					((uint32_t)0x00000007)	/* PLLSRC x9 */
+#define RCC_PLLMULL_CLK10					((uint32_t)0x00000008)	/* PLLSRC x10 */
+#define RCC_PLLMULL_CLK11					((uint32_t)0x00000009)	/* PLLSRC x11 */
+#define RCC_PLLMULL_CLK12					((uint32_t)0x0000000A)	/* PLLSRC x12 */
+#define RCC_PLLMULL_CLK13					((uint32_t)0x0000000B)	/* PLLSRC x13 */
+#define RCC_PLLMULL_CLK14					((uint32_t)0x0000000C)	/* PLLSRC x14 */
+#define RCC_PLLMULL_CLK15					((uint32_t)0x0000000D)	/* PLLSRC x15 */
+#define RCC_PLLMULL_CLK16					((uint32_t)0x0000000E)	/* PLLSRC x16 */
 
 /* @ref AHB Prescaler */
-#define RCC_AHB_SYSCLK_DIV1					(0x00000000UL)	/* SYSCLK */
-#define RCC_AHB_SYSCLK_DIV2					(0x00000080UL)	/* SYSCLK Divided By 2 */
-#define RCC_AHB_SYSCLK_DIV4					(0x00000090UL)	/* SYSCLK Divided By 4 */
-#define RCC_AHB_SYSCLK_DIV8					(0x000000A0UL)	/* SYSCLK Divided By 8 */
-#define RCC_AHB_SYSCLK_DIV16				(0x000000B0UL)	/* SYSCLK Divided By 16 */
-#define RCC_AHB_SYSCLK_DIV64				(0x000000C0UL)	/* SYSCLK Divided By 64 */
-#define RCC_AHB_SYSCLK_DIV128				(0x000000D0UL)	/* SYSCLK Divided By 128 */
-#define RCC_AHB_SYSCLK_DIV256				(0x000000E0UL)	/* SYSCLK Divided By 256 */
-#define RCC_AHB_SYSCLK_DIV512				(0x000000F0UL)	/* SYSCLK Divided By 512 */
+#define RCC_AHB_SYSCLK_DIV1					((uint32_t)0x00000000)	/* SYSCLK */
+#define RCC_AHB_SYSCLK_DIV2					((uint32_t)0x00000080)	/* SYSCLK Divided By 2 */
+#define RCC_AHB_SYSCLK_DIV4					((uint32_t)0x00000090)	/* SYSCLK Divided By 4 */
+#define RCC_AHB_SYSCLK_DIV8					((uint32_t)0x000000A0)	/* SYSCLK Divided By 8 */
+#define RCC_AHB_SYSCLK_DIV16				((uint32_t)0x000000B0)	/* SYSCLK Divided By 16 */
+#define RCC_AHB_SYSCLK_DIV64				((uint32_t)0x000000C0)	/* SYSCLK Divided By 64 */
+#define RCC_AHB_SYSCLK_DIV128				((uint32_t)0x000000D0)	/* SYSCLK Divided By 128 */
+#define RCC_AHB_SYSCLK_DIV256				((uint32_t)0x000000E0)	/* SYSCLK Divided By 256 */
+#define RCC_AHB_SYSCLK_DIV512				((uint32_t)0x000000F0)	/* SYSCLK Divided By 512 */
 
 /* @ref APB Prescaler */
-#define RCC_APB_HCLK_DIV1					(0x00000000UL)	/* AHBCLK */
-#define RCC_APB_HCLK_DIV2					(0x00000004UL)	/* AHBCLK Divided By 2 */
-#define RCC_APB_HCLK_DIV4					(0x00000005UL)	/* AHBCLK Divided By 4 */
-#define RCC_APB_HCLK_DIV8					(0x00000006UL)	/* AHBCLK Divided By 8 */
-#define RCC_APB_HCLK_DIV16					(0x00000007UL)	/* AHBCLK Divided By 16 */
+#define RCC_APB_HCLK_DIV1					((uint32_t)0x00000000)	/* AHBCLK */
+#define RCC_APB_HCLK_DIV2					((uint32_t)0x00000004)	/* AHBCLK Divided By 2 */
+#define RCC_APB_HCLK_DIV4					((uint32_t)0x00000005)	/* AHBCLK Divided By 4 */
+#define RCC_APB_HCLK_DIV8					((uint32_t)0x00000006)	/* AHBCLK Divided By 8 */
+#define RCC_APB_HCLK_DIV16					((uint32_t)0x00000007)	/* AHBCLK Divided By 16 */
 
 /*===============================================================================
  *           		    	   	   Generic Macros  		  	                     *
  ================================================================================*/
+
+/* @ref RCC Clock Value */
+#define RCC_HSI_CLK_VAL						((uint32_t)8000000)			/* 8Mhz */
+#define RCC_HSE_CLK_VAL						((uint32_t)16000000)		/* 4-16Mhz */
+#define RCC_PLL_CLK_VAL						((uint32_t)16000000)
+
 
 /*RCC Buses IDs*/
 #define RCC_AHB_BUS 					0
@@ -183,5 +189,36 @@ void MCAL_RCC_disableCLK(uint8_t a_BusID, uint8_t a_PeriphID);
  * Note           : None.																			*/
 void MCAL_RCC_reset(uint8_t a_BusID, uint8_t a_PeriphID);
 
+/**===============================================================================
+ * Function Name  : MCAL_RCC_getSYSCLK.
+ * Brief          : Function To Get The System Clock.
+ * Parameter (in) : None.
+ * Return         : System Clock Frequency.
+ * Note           : None.																			*/
+uint32_t MCAL_RCC_getSYSCLK(void);
+
+/**===============================================================================
+ * Function Name  : MCAL_RCC_getHCLK.
+ * Brief          : Function To Get The AHB Clock.
+ * Parameter (in) : None.
+ * Return         : AHB Clock Frequency.
+ * Note           : None.																			*/
+uint32_t MCAL_RCC_getHCLK(void);
+
+/**===============================================================================
+ * Function Name  : MCAL_RCC_GetPCLK1.
+ * Brief          : Function To Get The APB1 Clock.
+ * Parameter (in) : None.
+ * Return         : APB1 Clock Frequency.
+ * Note           : None.																			*/
+uint32_t MCAL_RCC_GetPCLK1(void);
+
+/**===============================================================================
+ * Function Name  : MCAL_RCC_getHCLK.
+ * Brief          : Function To Get The APB2 Clock.
+ * Parameter (in) : None.
+ * Return         : APB2 Clock Frequency.
+ * Note           : None.																			*/
+uint32_t MCAL_RCC_GetPCLK2(void);
 
 #endif /* INC_STM32F103C8_RCC_DRIVER_H_ */
