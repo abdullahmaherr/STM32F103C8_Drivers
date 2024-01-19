@@ -50,7 +50,7 @@ void USART1_ISR(void)
 
 void systemInit(void)
 {
-	//	SysTick_Config((uint32_t)8000);/* For The Delay Function */
+	SysTick_Config((uint32_t)8000);/* For The Delay Function */
 
 	MCAL_RCC_initSYSClk();
 
@@ -76,5 +76,6 @@ int main(void)
 	/* Loop forever */
 	while(1)
 	{
+
 	}
 }
