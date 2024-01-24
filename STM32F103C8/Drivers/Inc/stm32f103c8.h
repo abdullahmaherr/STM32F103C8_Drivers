@@ -62,6 +62,9 @@
 /*USART*/
 #define USART2_BASE									0x40004400UL
 #define USART3_BASE									0x40004800UL
+
+/*SPI*/
+#define SPI2_BASE									0x40003800UL
 /********************************APB2 Bus Peripherals******************************/
 
 /*GPIO*/ /*Note That in LQFP48 GPIOA and GPIOB are fully included, GPIOC and GPIOD Partially Included, GPIOE Not Included*/
@@ -79,6 +82,9 @@
 
 /*USART*/
 #define USART1_BASE									0x40013800UL
+
+/*SPI*/
+#define SPI1_BASE									0x40013000UL
 
 /*===============================================================================
  *            	   				Peripheral Registers                             *
@@ -144,6 +150,20 @@ typedef struct
 	vuint32_t GTPR;
 }USART_TypeDef;
 
+/*SPI*/
+typedef struct
+{
+	vuint32_t CR1;
+	vuint32_t CR2;
+	vuint32_t SR;
+	vuint32_t DR;
+	vuint32_t CRCPR;
+	vuint32_t RXCRCR;
+	vuint32_t TXCRCR;
+	vuint32_t I2SCFGR;
+	vuint32_t I2SPR;
+}SPI_TypeDef;
+
 /*===============================================================================
  *            	   				Peripheral Instants                              *
  ================================================================================*/
@@ -169,6 +189,10 @@ typedef struct
 #define USART2						((USART_TypeDef *)(USART2_BASE))
 #define USART3						((USART_TypeDef *)(USART3_BASE))
 
+/*SPI*/
+#define SPI1						((SPI_TypeDef *)(SPI1_BASE))
+#define SPI2						((SPI_TypeDef *)(SPI2_BASE))
+
 /*===============================================================================
  *           		   		NVIC IRQ Enable/Disable Macros 	 		             *
  ================================================================================*/
@@ -186,6 +210,8 @@ typedef struct
 #define NVIC_USART2_EN()				(SET_BIT(NVIC_ISER1,(USART2_IRQ-32)))
 #define NVIC_USART3_EN()				(SET_BIT(NVIC_ISER1,(USART3_IRQ-32)))
 
+#define NVIC_SPI1_EN()					(SET_BIT(NVIC_ISER1,(SPI1_IRQ-32)))
+#define NVIC_SPI2_EN()					(SET_BIT(NVIC_ISER1,(SPI2_IRQ-32)))
 
 
 /* Disable Interrupt Request */
@@ -201,6 +227,8 @@ typedef struct
 #define NVIC_USART2_DI()				(SET_BIT(NVIC_ICER1,(USART2_IRQ-32)))
 #define NVIC_USART3_DI()				(SET_BIT(NVIC_ICER1,(USART3_IRQ-32)))
 
+#define NVIC_SPI1_DI()					(SET_BIT(NVIC_ICER1,(SPI1_IRQ-32)))
+#define NVIC_SPI2_DI()					(SET_BIT(NVIC_ICER1,(SPI2_IRQ-32)))
 
 /*===============================================================================
  *           		   	   	   Interrupt Vector Table  		                     *
@@ -229,8 +257,9 @@ typedef struct
 #define USART2_IRQ							38
 #define USART3_IRQ							39
 
-
-
+/*SPI*/
+#define SPI1_IRQ							35
+#define SPI2_IRQ							36
 
 
 #endif /* INC_STM32F103C8_H_ */
