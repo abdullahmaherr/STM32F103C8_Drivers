@@ -32,7 +32,7 @@
  *                              Global Variables                                 *
  ================================================================================*/
 /* Array of 3 Global Configuration Structure */
-USART_Config_t* gp_USART_Config[3] = {NULL,NULL,NULL};
+USART_Config_t g_USART_Config[3];
 
 /*===============================================================================
  *                          Private Function Prototypes	   		                 *
@@ -65,7 +65,7 @@ void MCAL_USART_Init(USART_TypeDef* USARTx,USART_Config_t* p_USART_Config)
 	if(USART1 == USARTx)
 	{
 		/* Assign Global Configuration Structure */
-		gp_USART_Config[0] = p_USART_Config;
+		g_USART_Config[0] = *p_USART_Config;
 
 		/* Enable Clock For The Peripheral */
 		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_USART1_ID);
@@ -76,7 +76,7 @@ void MCAL_USART_Init(USART_TypeDef* USARTx,USART_Config_t* p_USART_Config)
 	else if(USART2 == USARTx)
 	{
 		/* Assign Global Configuration Structure */
-		gp_USART_Config[1] = p_USART_Config;
+		g_USART_Config[1] = *p_USART_Config;
 
 		/* Enable Clock For The Peripheral */
 		MCAL_RCC_enableCLK(RCC_APB1_BUS, RCC_USART2_ID);
@@ -87,7 +87,7 @@ void MCAL_USART_Init(USART_TypeDef* USARTx,USART_Config_t* p_USART_Config)
 	else if(USART3 == USARTx)
 	{
 		/* Assign Global Configuration Structure */
-		gp_USART_Config[2] = p_USART_Config;
+		g_USART_Config[2] = *p_USART_Config;
 
 		/* Enable Clock For The Peripheral */
 		MCAL_RCC_enableCLK(RCC_APB1_BUS, RCC_USART3_ID);
@@ -198,25 +198,25 @@ void MCAL_USART_TransmitData(USART_TypeDef* USARTx, uint16_t* p_Buff, USART_Poll
 	if(USART1 == USARTx)
 	{
 		/* Assign Data Register */
-		if(USART_Word_Length_8BITS == gp_USART_Config[0]->USART_WordLength)
+		if(USART_Word_Length_8BITS == g_USART_Config[0].USART_WordLength)
 			USARTx->DR = ( *p_Buff & (uint8_t)0xFF );
-		else if(USART_Word_Length_9BITS == gp_USART_Config[0]->USART_WordLength)
+		else if(USART_Word_Length_9BITS == g_USART_Config[0].USART_WordLength)
 			USARTx->DR = ( *p_Buff & (uint16_t)0x1FF );
 	}
 	else if(USART2 == USARTx)
 	{
 		/* Assign Data Register */
-		if(USART_Word_Length_8BITS == gp_USART_Config[1]->USART_WordLength)
+		if(USART_Word_Length_8BITS == g_USART_Config[1].USART_WordLength)
 			USARTx->DR = ( *p_Buff & (uint8_t)0xFF );
-		else if(USART_Word_Length_9BITS == gp_USART_Config[1]->USART_WordLength)
+		else if(USART_Word_Length_9BITS == g_USART_Config[1].USART_WordLength)
 			USARTx->DR = ( *p_Buff & (uint16_t)0x1FF );
 	}
 	else if(USART3 == USARTx)
 	{
 		/* Assign Data Register */
-		if(USART_Word_Length_8BITS == gp_USART_Config[2]->USART_WordLength)
+		if(USART_Word_Length_8BITS == g_USART_Config[2].USART_WordLength)
 			USARTx->DR = ( *p_Buff & (uint8_t)0xFF );
-		else if(USART_Word_Length_9BITS == gp_USART_Config[2]->USART_WordLength)
+		else if(USART_Word_Length_9BITS == g_USART_Config[2].USART_WordLength)
 			USARTx->DR = ( *p_Buff & (uint16_t)0x1FF );
 	}
 }
@@ -237,16 +237,16 @@ void MCAL_USART_ReceiveData(USART_TypeDef* USARTx, uint16_t* p_Buff, USART_Polli
 	if(USART1 == USARTx)
 	{
 		/* Read Data Register */
-		if(USART_Word_Length_8BITS == gp_USART_Config[0]->USART_WordLength)
+		if(USART_Word_Length_8BITS == g_USART_Config[0].USART_WordLength)
 		{
-			if(USART_PARITY_BIT_NONE == gp_USART_Config[0]->USART_ParityBit)
+			if(USART_PARITY_BIT_NONE == g_USART_Config[0].USART_ParityBit)
 				*p_Buff = ( USARTx->DR & (uint8_t)0xFF );
 			else
 				*p_Buff = ( USARTx->DR & (uint8_t)0x7F );
 		}
-		else if(USART_Word_Length_9BITS == gp_USART_Config[0]->USART_WordLength)
+		else if(USART_Word_Length_9BITS == g_USART_Config[0].USART_WordLength)
 		{
-			if(USART_PARITY_BIT_NONE == gp_USART_Config[0]->USART_ParityBit)
+			if(USART_PARITY_BIT_NONE == g_USART_Config[0].USART_ParityBit)
 				*p_Buff = USARTx->DR;
 			else
 				*p_Buff = ( USARTx->DR & (uint8_t)0xFF );
@@ -255,16 +255,16 @@ void MCAL_USART_ReceiveData(USART_TypeDef* USARTx, uint16_t* p_Buff, USART_Polli
 	else if(USART2 == USARTx)
 	{
 		/* Read Data Register */
-		if(USART_Word_Length_8BITS == gp_USART_Config[1]->USART_WordLength)
+		if(USART_Word_Length_8BITS == g_USART_Config[1].USART_WordLength)
 		{
-			if(USART_PARITY_BIT_NONE == gp_USART_Config[1]->USART_ParityBit)
+			if(USART_PARITY_BIT_NONE == g_USART_Config[1].USART_ParityBit)
 				*p_Buff = ( USARTx->DR & (uint8_t)0xFF );
 			else
 				*p_Buff = ( USARTx->DR & (uint8_t)0x7F );
 		}
-		else if(USART_Word_Length_9BITS == gp_USART_Config[1]->USART_WordLength)
+		else if(USART_Word_Length_9BITS == g_USART_Config[1].USART_WordLength)
 		{
-			if(USART_PARITY_BIT_NONE == gp_USART_Config[1]->USART_ParityBit)
+			if(USART_PARITY_BIT_NONE == g_USART_Config[1].USART_ParityBit)
 				*p_Buff = USARTx->DR;
 			else
 				*p_Buff = ( USARTx->DR & (uint8_t)0xFF );
@@ -273,16 +273,16 @@ void MCAL_USART_ReceiveData(USART_TypeDef* USARTx, uint16_t* p_Buff, USART_Polli
 	else if(USART3 == USARTx)
 	{
 		/* Read Data Register */
-		if(USART_Word_Length_8BITS == gp_USART_Config[2]->USART_WordLength)
+		if(USART_Word_Length_8BITS == g_USART_Config[2].USART_WordLength)
 		{
-			if(USART_PARITY_BIT_NONE == gp_USART_Config[2]->USART_ParityBit)
+			if(USART_PARITY_BIT_NONE == g_USART_Config[2].USART_ParityBit)
 				*p_Buff = ( USARTx->DR & (uint8_t)0xFF );	/* All 8 Bits are Data */
 			else
 				*p_Buff = ( USARTx->DR & (uint8_t)0x7F ); 	/* 7 Bits are Data */
 		}
-		else if(USART_Word_Length_9BITS == gp_USART_Config[2]->USART_WordLength)
+		else if(USART_Word_Length_9BITS == g_USART_Config[2].USART_WordLength)
 		{
-			if(USART_PARITY_BIT_NONE == gp_USART_Config[2]->USART_ParityBit)
+			if(USART_PARITY_BIT_NONE == g_USART_Config[2].USART_ParityBit)
 				*p_Buff = USARTx->DR;	/* All Bits are Data */
 			else
 				*p_Buff = ( USARTx->DR & (uint8_t)0xFF );	/* 8 Bits are Data */
@@ -332,14 +332,14 @@ void MCAL_USART_GPIO_PinConfig(USART_TypeDef* USARTx)
 		MCAL_GPIO_Init(GPIOA, &config);
 
 		/* Configure Control Flow Pins */
-		if((USART_FLOW_CONTROL_CTS == gp_USART_Config[0]->USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == gp_USART_Config[0]->USART_FlowControl) )
+		if((USART_FLOW_CONTROL_CTS == g_USART_Config[0].USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == g_USART_Config[0].USART_FlowControl) )
 		{
 			/* GPIOA PIN11 CTS */
 			config.GPIO_PinNumber = GPIO_PIN11;
 			config.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
 			MCAL_GPIO_Init(GPIOA, &config);
 
-		}else if((USART_FLOW_CONTROL_RTS == gp_USART_Config[0]->USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == gp_USART_Config[0]->USART_FlowControl))
+		}else if((USART_FLOW_CONTROL_RTS == g_USART_Config[0].USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == g_USART_Config[0].USART_FlowControl))
 		{
 			/* GPIOA PIN12 RTS */
 			config.GPIO_PinNumber = GPIO_PIN12;
@@ -363,14 +363,14 @@ void MCAL_USART_GPIO_PinConfig(USART_TypeDef* USARTx)
 		MCAL_GPIO_Init(GPIOA, &config);
 
 		/* Configure Control Flow Pins */
-		if((USART_FLOW_CONTROL_CTS == gp_USART_Config[1]->USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == gp_USART_Config[1]->USART_FlowControl) )
+		if((USART_FLOW_CONTROL_CTS == g_USART_Config[1].USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == g_USART_Config[1].USART_FlowControl) )
 		{
 			/* GPIOA PIN0 CTS */
 			config.GPIO_PinNumber = GPIO_PIN0;
 			config.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
 			MCAL_GPIO_Init(GPIOA, &config);
 
-		}else if((USART_FLOW_CONTROL_RTS == gp_USART_Config[1]->USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == gp_USART_Config[1]->USART_FlowControl))
+		}else if((USART_FLOW_CONTROL_RTS == g_USART_Config[1].USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == g_USART_Config[1].USART_FlowControl))
 		{
 			/* GPIOA PIN1 RTS */
 			config.GPIO_PinNumber = GPIO_PIN1;
@@ -394,14 +394,14 @@ void MCAL_USART_GPIO_PinConfig(USART_TypeDef* USARTx)
 		MCAL_GPIO_Init(GPIOB, &config);
 
 		/* Configure Control Flow Pins */
-		if((USART_FLOW_CONTROL_CTS == gp_USART_Config[2]->USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == gp_USART_Config[2]->USART_FlowControl) )
+		if((USART_FLOW_CONTROL_CTS == g_USART_Config[2].USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == g_USART_Config[2].USART_FlowControl) )
 		{
 			/* GPIOB PIN13 CTS */
 			config.GPIO_PinNumber = GPIO_PIN13;
 			config.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
 			MCAL_GPIO_Init(GPIOB, &config);
 
-		}else if((USART_FLOW_CONTROL_RTS == gp_USART_Config[2]->USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == gp_USART_Config[2]->USART_FlowControl))
+		}else if((USART_FLOW_CONTROL_RTS == g_USART_Config[2].USART_FlowControl) || (USART_FLOW_CONTROL_CTS_RTS == g_USART_Config[2].USART_FlowControl))
 		{
 			/* GPIOB PIN14 RTS */
 			config.GPIO_PinNumber = GPIO_PIN14;
@@ -420,22 +420,22 @@ void MCAL_USART_GPIO_PinConfig(USART_TypeDef* USARTx)
 void USART1_IRQHandler(void)
 {
 	/* Call The ISR CallBack Function */
-	if(gp_USART_Config[0]->p_USART_ISR != NULL)
-		(*gp_USART_Config[0]->p_USART_ISR)();
+	if(g_USART_Config[0].p_USART_ISR != NULL)
+		(*g_USART_Config[0].p_USART_ISR)();
 }
 
 void USART2_IRQHandler(void)
 {
 	/* Call The ISR CallBack Function */
-	if(gp_USART_Config[1]->p_USART_ISR != NULL)
-		(*gp_USART_Config[1]->p_USART_ISR)();
+	if(g_USART_Config[1].p_USART_ISR != NULL)
+		(*g_USART_Config[1].p_USART_ISR)();
 }
 
 
 void USART3_IRQHandler(void)
 {
 	/* Call The ISR CallBack Function */
-	if(gp_USART_Config[2]->p_USART_ISR != NULL)
-		(*gp_USART_Config[2]->p_USART_ISR)();
+	if(g_USART_Config[2].p_USART_ISR != NULL)
+		(*g_USART_Config[2].p_USART_ISR)();
 }
 

@@ -25,7 +25,7 @@
 /*===============================================================================
  *                              Global Variables                                 *
  ================================================================================*/
-SPI_Config_t* gp_SPI_Config[2] = {NULL,NULL};
+SPI_Config_t g_SPI_Config[2];
 
 /*===============================================================================
  *                          Private Function Prototypes	   		                 *
@@ -59,7 +59,7 @@ void MCAL_SPI_Init(SPI_TypeDef* SPIx,SPI_Config_t* p_SPI_Config)
 	if(SPI1 == SPIx)
 	{
 		/* Assign Global Configuration Structure */
-		gp_SPI_Config[0] = p_SPI_Config;
+		g_SPI_Config[0] = *p_SPI_Config;
 
 		/* Enable Clock For The Peripheral */
 		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_SPI1_ID);
@@ -68,7 +68,7 @@ void MCAL_SPI_Init(SPI_TypeDef* SPIx,SPI_Config_t* p_SPI_Config)
 	}else if(SPI2 == SPIx)
 	{
 		/* Assign Global Configuration Structure */
-		gp_SPI_Config[1] = p_SPI_Config;
+		g_SPI_Config[1] = *p_SPI_Config;
 
 		/* Enable Clock For The Peripheral */
 		MCAL_RCC_enableCLK(RCC_APB1_BUS, RCC_SPI2_ID);
@@ -239,7 +239,7 @@ static void MCAL_SPI_GPIO_PinConfig(SPI_TypeDef* SPIx)
 	GPIO_PinConfig_t spi_gpio_config;
 	if(SPI1 == SPIx)
 	{
-		if(SPI_MODE_MASTER == gp_SPI_Config[0]->SPI_Mode)	/* Master */
+		if(SPI_MODE_MASTER == g_SPI_Config[0].SPI_Mode)	/* Master */
 		{
 			/*MOSI1*/
 			spi_gpio_config.GPIO_PinNumber = GPIO_PIN7;
@@ -259,13 +259,13 @@ static void MCAL_SPI_GPIO_PinConfig(SPI_TypeDef* SPIx)
 			MCAL_GPIO_Init(GPIOA, &spi_gpio_config);
 
 			/*NSS1*/
-			if(SPI_NSS_HW_MASTER_INPUT == gp_SPI_Config[0]->SPI_NSS)
+			if(SPI_NSS_HW_MASTER_INPUT == g_SPI_Config[0].SPI_NSS)
 			{
 				spi_gpio_config.GPIO_PinNumber = GPIO_PIN4;
 				spi_gpio_config.GPIO_Mode = GPIO_MODE_INPUT_FLOATING;
 				MCAL_GPIO_Init(GPIOA, &spi_gpio_config);
 
-			}else if(SPI_NSS_HW_MASTER_OUTPUT == gp_SPI_Config[0]->SPI_Mode)
+			}else if(SPI_NSS_HW_MASTER_OUTPUT == g_SPI_Config[0].SPI_Mode)
 			{
 				spi_gpio_config.GPIO_PinNumber = GPIO_PIN4;
 				spi_gpio_config.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
@@ -292,7 +292,7 @@ static void MCAL_SPI_GPIO_PinConfig(SPI_TypeDef* SPIx)
 			MCAL_GPIO_Init(GPIOA, &spi_gpio_config);
 
 			/*NSS1*/
-			if(SPI_NSS_HW_SLAVE == gp_SPI_Config[0]->SPI_NSS)
+			if(SPI_NSS_HW_SLAVE == g_SPI_Config[0].SPI_NSS)
 			{
 				spi_gpio_config.GPIO_PinNumber = GPIO_PIN4;
 				spi_gpio_config.GPIO_Mode = GPIO_MODE_INPUT_FLOATING;
@@ -304,7 +304,7 @@ static void MCAL_SPI_GPIO_PinConfig(SPI_TypeDef* SPIx)
 
 	}else if(SPI2 == SPIx)
 	{
-		if(SPI_MODE_MASTER == gp_SPI_Config[1]->SPI_Mode)	/* Master */
+		if(SPI_MODE_MASTER == g_SPI_Config[1].SPI_Mode)	/* Master */
 		{
 			/*MOSI2*/
 			spi_gpio_config.GPIO_PinNumber = GPIO_PIN15;
@@ -324,13 +324,13 @@ static void MCAL_SPI_GPIO_PinConfig(SPI_TypeDef* SPIx)
 			MCAL_GPIO_Init(GPIOB, &spi_gpio_config);
 
 			/*NSS2*/
-			if(SPI_NSS_HW_MASTER_INPUT == gp_SPI_Config[1]->SPI_NSS)
+			if(SPI_NSS_HW_MASTER_INPUT == g_SPI_Config[1].SPI_NSS)
 			{
 				spi_gpio_config.GPIO_PinNumber = GPIO_PIN12;
 				spi_gpio_config.GPIO_Mode = GPIO_MODE_INPUT_FLOATING;
 				MCAL_GPIO_Init(GPIOB, &spi_gpio_config);
 
-			}else if(SPI_NSS_HW_MASTER_OUTPUT == gp_SPI_Config[1]->SPI_Mode)
+			}else if(SPI_NSS_HW_MASTER_OUTPUT == g_SPI_Config[1].SPI_Mode)
 			{
 				spi_gpio_config.GPIO_PinNumber = GPIO_PIN12;
 				spi_gpio_config.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
@@ -356,7 +356,7 @@ static void MCAL_SPI_GPIO_PinConfig(SPI_TypeDef* SPIx)
 			MCAL_GPIO_Init(GPIOB, &spi_gpio_config);
 
 			/*NSS2*/
-			if(SPI_NSS_HW_SLAVE == gp_SPI_Config[1]->SPI_NSS)
+			if(SPI_NSS_HW_SLAVE == g_SPI_Config[1].SPI_NSS)
 			{
 				spi_gpio_config.GPIO_PinNumber = GPIO_PIN12;
 				spi_gpio_config.GPIO_Mode = GPIO_MODE_INPUT_FLOATING;
@@ -385,8 +385,8 @@ void SPI1_IRQHandler(void)
 	IRQ_src.OVR = GET_BIT(SPI1->SR,6);
 
 	/* Call The ISR CallBack Function */
-	if(gp_SPI_Config[1]->p_SPI_ISR != NULL)
-		(*gp_SPI_Config[0]->p_SPI_ISR)(IRQ_src);
+	if(g_SPI_Config[1].p_SPI_ISR != NULL)
+		(*g_SPI_Config[0].p_SPI_ISR)(IRQ_src);
 }
 
 void SPI2_IRQHandler(void)
@@ -400,6 +400,6 @@ void SPI2_IRQHandler(void)
 	IRQ_src.OVR = GET_BIT(SPI1->SR,6);
 
 	/* Call The ISR CallBack Function */
-	if(gp_SPI_Config[1]->p_SPI_ISR != NULL)
-		(*gp_SPI_Config[1]->p_SPI_ISR)(IRQ_src);
+	if(g_SPI_Config[1].p_SPI_ISR != NULL)
+		(*g_SPI_Config[1].p_SPI_ISR)(IRQ_src);
 }
