@@ -25,18 +25,28 @@
 
 /* Keypad configurations for number of rows and columns */
 #define KEYPAD_NUM_COLS                   4
-#define KEYPAD_NUM_ROWS                   4
+#define KEYPAD_NUM_ROWS                   4 /*COLS Will Be 3 in 3x4*/
 
 /* Keypad Port Configurations */
-#define KEYPAD_ROW_PORT           	   GPIOB
-#define KEYPAD_FIRST_ROW_PIN       	   GPIO_PIN9
+#define KEYPAD_ROW_PORT            GPIOB
+#define KEYPAD_ROW_PIN0       	   GPIO_PIN9
+#define KEYPAD_ROW_PIN1       	   GPIO_PIN9
+#define KEYPAD_ROW_PIN2       	   GPIO_PIN9
+#define KEYPAD_ROW_PIN3       	   GPIO_PIN9
 
-#define KEYPAD_COL_PORT	               GPIOB
-#define KEYPAD_FIRST_COL_PIN           GPIO_PIN5
+#define KEYPAD_COL_PORT	          GPIOB
+#define KEYPAD_COL_PIN0           GPIO_PIN5
+#define KEYPAD_COL_PIN1           GPIO_PIN5
+#define KEYPAD_COL_PIN2           GPIO_PIN5
+#define KEYPAD_COL_PIN3           GPIO_PIN5
 
 /* Keypad button logic configurations */
 #define KEYPAD_BUTTON_PRESSED            LOGIC_LOW
 #define KEYPAD_BUTTON_RELEASED           LOGIC_HIGH
+
+/*===============================================================================
+ *           		    	   	   Generic Macros  		  	                     *
+ ================================================================================*/
 
 
 /*===============================================================================
