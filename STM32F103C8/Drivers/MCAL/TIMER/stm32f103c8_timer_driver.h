@@ -149,8 +149,12 @@ void MCAL_Tim_Stop(TIM_TypeDef* TIMx);
  * Function Name  : MCAL_Tim_PWM.
  * Brief          : Function To Generate PWM.
  * Parameter (in) : Instant TIMx where x Could Be 1(Advanced) or 2,3,4(General Purpose).
+ * Parameter (in) : The Desired Channel.
+ * Parameter (in) : The Channel Compare Value.
+ * Parameter (in) : The Period Value.
+ * Parameter (in) : The Prescaler Value.
  * Return         : None.
  * Note           : None.																				*/
-void MCAL_Tim_PWM(TIM_TypeDef* TIMx, uint32_t Channel, uint16_t DutyCycle, uint16_t Freq);
+void MCAL_Tim_PWM(TIM_TypeDef* TIMx, uint32_t Channel, uint16_t DutyCycle, uint16_t Freq, uint16_t Presc);
 
 #endif /* INC_STM32F103C8_TIMER_DRIVER_H_ */

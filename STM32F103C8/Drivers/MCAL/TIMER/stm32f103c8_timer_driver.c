@@ -69,7 +69,8 @@ void MCAL_Tim_Init(TIM_TypeDef* TIMx, TIM_Config_t* p_TIM_Config)
 
 	/* Enable Channels */
 	TIMx->CCER = p_TIM_Config->ActiveChannels;
-	SET_BIT(TIMx->BDTR, 15); /* Main output enable */
+	if(TIM1 == TIMx && p_TIM_Config->ActiveChannels != 0)
+		SET_BIT(TIMx->BDTR, 15); /* Main output enable */
 
 	/* Enable/Disable IRQ */
 	TIMx->DIER = p_TIM_Config->TIM_IRQ;
@@ -203,9 +204,327 @@ void MCAL_Tim_Stop(TIM_TypeDef* TIMx)
  * Function Name  : MCAL_Tim_PWM.
  * Brief          : Function To Generate PWM.
  * Parameter (in) : Instant TIMx where x Could Be 1(Advanced) or 2,3,4(General Purpose).
+ * Parameter (in) : The Desired Channel.
+ * Parameter (in) : The Channel Compare Value.
+ * Parameter (in) : The Period Value.
+ * Parameter (in) : The Prescaler Value.
  * Return         : None.
  * Note           : None.																				*/
+void MCAL_Tim_PWM(TIM_TypeDef* TIMx, uint32_t Channel, uint16_t DutyCycle, uint16_t Freq, uint16_t Presc)
+{
+	GPIO_PinConfig_t gpio_cfg;
 
+	/* Disable the counter */
+	TIMx->CR1 = 0;
+
+
+	if(TIM1 == TIMx)/* TIMER1 */
+	{
+		/* Enable Clock */
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_TIM1_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_GPIOA_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_AFIO_ID);
+
+		switch (Channel)
+		{
+		case CHANNEL1:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN8;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<3); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<0);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR1 = DutyCycle;			/* Set Compare Value */
+			TIMx->BDTR |= (1<<15);			/* Main Output Enable */
+			TIMx->DIER |= (0b11<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL2:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN9;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<4);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<12); 		/* PWM-1 Mode Enable */
+			TIMx->CCR2 = DutyCycle;			/* Set Compare Value */
+			TIMx->BDTR |= (1<<15);			/* Main Output Enable */
+			TIMx->DIER |= (0b101<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL3:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN10;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<3);	 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<8);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR3 = DutyCycle;			/* Set Compare Value */
+			TIMx->BDTR |= (1<<15);			/* Main Output Enable */
+			TIMx->DIER |= (0b1001<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL4:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN11;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<12);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<12); 		/* PWM-1 Mode Enable */
+			TIMx->CCR4 = DutyCycle;			/* Set Compare Value */
+			TIMx->BDTR |= (1<<15);			/* Main Output Enable */
+			TIMx->DIER |= (0b10001<<0);		/* Interrupt Enable */
+			break;
+
+		default:
+			break;
+		}
+
+
+	}else if(TIM2 == TIMx) /* TIMER2 */
+	{
+		/* Enable Clock */
+		MCAL_RCC_enableCLK(RCC_APB1_BUS, RCC_TIM2_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_GPIOA_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_AFIO_ID);
+
+		switch (Channel)
+		{
+		case CHANNEL1:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN0;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<3); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<0);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR1 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b11<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL2:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN1;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<4);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<12); 		/* PWM-1 Mode Enable */
+			TIMx->CCR2 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b101<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL3:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN2;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<3);	 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<8);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR3 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b1001<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL4:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN3;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<12);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<12); 		/* PWM-1 Mode Enable */
+			TIMx->CCR4 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b10001<<0);		/* Interrupt Enable */
+			break;
+
+		default:
+			break;
+		}
+
+	}else if(TIM3 == TIMx) /* TIMER3 */
+	{
+
+		/* Enable Clock */
+		MCAL_RCC_enableCLK(RCC_APB1_BUS, RCC_TIM3_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_GPIOA_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_GPIOB_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_AFIO_ID);
+
+		switch (Channel)
+		{
+		case CHANNEL1:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN6;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<3); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<0);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR1 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b11<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL2:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN7;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOA, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<4);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<12); 	/* PWM-1 Mode Enable */
+			TIMx->CCR2 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b101<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL3:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN0;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOB, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<3);	 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<8);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR3 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b1001<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL4:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN1;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOB, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<12);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<12); 	/* PWM-1 Mode Enable */
+			TIMx->CCR4 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b10001<<0);		/* Interrupt Enable */
+			break;
+
+		default:
+			break;
+		}
+
+	}else if(TIM4 == TIMx) /* TIMER4 */
+	{
+		/* Enable Clock */
+		MCAL_RCC_enableCLK(RCC_APB1_BUS, RCC_TIM4_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_GPIOB_ID);
+		MCAL_RCC_enableCLK(RCC_APB2_BUS, RCC_AFIO_ID);
+
+		switch (Channel)
+		{
+		case CHANNEL1:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN6;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOB, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<3); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<0);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR1 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b11<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL2:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN7;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOB, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR1 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<4);			/* Capture/Compare Enable */
+			TIMx->CCMR1 |= (0b110<<12); 		/* PWM-1 Mode Enable */
+			TIMx->CCR2 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b101<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL3:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN8;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOB, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<3);	 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<8);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<4); 		/* PWM-1 Mode Enable */
+			TIMx->CCR3 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b1001<<0);		/* Interrupt Enable */
+			break;
+
+		case CHANNEL4:
+			/* Configure The Pin */
+			gpio_cfg.GPIO_PinNumber = GPIO_PIN9;
+			gpio_cfg.GPIO_Mode = GPIO_MODE_OUTPUT_AF_PUSHPULL;
+			gpio_cfg.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_50M;
+			MCAL_GPIO_Init(GPIOB, &gpio_cfg);
+
+			/* Configure The Timer Channel */
+			TIMx->CCMR2 |= (1<<11); 		/* Output Compare Preload Enable */
+			TIMx->CCER |= (1<<12);			/* Capture/Compare Enable */
+			TIMx->CCMR2 |= (0b110<<12); 	/* PWM-1 Mode Enable */
+			TIMx->CCR4 = DutyCycle;			/* Set Compare Value */
+			TIMx->DIER |= (0b10001<<0);		/* Interrupt Enable */
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	TIMx->CR1 |= (1<<7); /* ARR Preload Enable */
+	TIMx->ARR = Freq;
+	TIMx->PSC = Presc;
+	TIMx->EGR |= (1<<0); /* Reinitialize the counter */
+	TIMx->CR1 |= (1<<0); /* Counter Enable */
+
+}
 
 
 /*===============================================================================
