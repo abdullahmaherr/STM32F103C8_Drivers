@@ -1,0 +1,19 @@
+/*============================================================================================
+ * Module : SPI
+ *
+ * File Name : stm32f1xx_hal_spi.c
+ *
+ * Author: Abdullah Maher
+ *
+ * Description : Header File Of Bit Banging SPI
+ *
+ * Created on: Aug 18, 2024
+ =============================================================================================*/
+
+
+#ifndef INCLUDES_STM32F1XX_HAL_SPI_H_
+#define INCLUDES_STM32F1XX_HAL_SPI_H_
+
+
+
+#endif /* INCLUDES_STM32F1XX_HAL_SPI_H_ */

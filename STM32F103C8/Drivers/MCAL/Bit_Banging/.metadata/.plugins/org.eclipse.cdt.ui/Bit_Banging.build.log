@@ -1,0 +1,20 @@
+20:22:04 **** Incremental Build of configuration Debug for project Bit_Banging ****
+make -j4 all 
+arm-none-eabi-gcc -gdwarf-2 "../Drivers/Src/stm32f1xx_hal_gpio_driver.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/Src/stm32f1xx_hal_gpio_driver.d" -MT"Drivers/Src/stm32f1xx_hal_gpio_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/Src/stm32f1xx_hal_gpio_driver.o"
+arm-none-eabi-gcc -o "Bit_Banging.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Users\abdul\Desktop\Bit_Banging\Bit_Banging\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Bit_Banging.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Bit_Banging.elf
+ 
+arm-none-eabi-size   Bit_Banging.elf 
+arm-none-eabi-objdump -h -S  Bit_Banging.elf  > "Bit_Banging.list"
+arm-none-eabi-objcopy  -O binary  Bit_Banging.elf  "Bit_Banging.bin"
+   text	   data	    bss	    dec	    hex	filename
+    556	      8	   1568	   2132	    854	Bit_Banging.elf
+Finished building: default.size.stdout
+ 
+Finished building: Bit_Banging.bin
+ 
+Finished building: Bit_Banging.list
+ 
+
+20:22:17 Build Finished. 0 errors, 0 warnings. (took 13s.565ms)
+

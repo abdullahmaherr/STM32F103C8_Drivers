@@ -1,0 +1,8 @@
+stm32f1xx_hal_gpio_driver.c:52:6:HAL_GPIO_Init	32	static
+stm32f1xx_hal_gpio_driver.c:138:10:HAL_GPIO_ReadPin	24	static
+stm32f1xx_hal_gpio_driver.c:151:6:HAL_GPIO_WritePin	16	static
+stm32f1xx_hal_gpio_driver.c:160:10:HAL_GPIO_ReadPort	16	static
+stm32f1xx_hal_gpio_driver.c:165:6:HAL_GPIO_WritePort	16	static
+stm32f1xx_hal_gpio_driver.c:170:6:HAL_GPIO_TogglePin	16	static
+stm32f1xx_hal_gpio_driver.c:175:6:HAL_GPIO_LockPin	24	static
+stm32f1xx_hal_gpio_driver.c:205:17:GET_PIN_POSITION	16	static

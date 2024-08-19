@@ -1,0 +1,55 @@
+20:21:29 **** Build of configuration Debug for project Bit_Banging ****
+make -j4 all 
+arm-none-eabi-gcc -gdwarf-2 -mcpu=cortex-m3 -g3 -c -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f103c8tx.d" -MT"Startup/startup_stm32f103c8tx.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Startup/startup_stm32f103c8tx.o" "../Startup/startup_stm32f103c8tx.s"
+arm-none-eabi-gcc -gdwarf-2 "../Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/main.d" -MT"Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Src/main.o"
+arm-none-eabi-gcc -gdwarf-2 "../Src/syscalls.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc -gdwarf-2 "../Src/sysmem.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc -gdwarf-2 "../Drivers/Src/stm32f1xx_hal_gpio_driver.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/Src/stm32f1xx_hal_gpio_driver.d" -MT"Drivers/Src/stm32f1xx_hal_gpio_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/Src/stm32f1xx_hal_gpio_driver.o"
+arm-none-eabi-gcc -gdwarf-2 "../Drivers/Src/stm32f1xx_hal_spi.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/Src/stm32f1xx_hal_spi.d" -MT"Drivers/Src/stm32f1xx_hal_spi.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/Src/stm32f1xx_hal_spi.o"
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c: In function 'HAL_GPIO_DeInit':
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:112:3: warning: implicit declaration of function 'MCAL_RCC_reset' [-Wimplicit-function-declaration]
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOA_ID);
+   ^~~~~~~~~~~~~~
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:112:18: error: 'RCC_APB2_BUS' undeclared (first use in this function)
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOA_ID);
+                  ^~~~~~~~~~~~
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:112:18: note: each undeclared identifier is reported only once for each function it appears in
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:112:31: error: 'RCC_GPIOA_ID' undeclared (first use in this function)
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOA_ID);
+                               ^~~~~~~~~~~~
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:117:31: error: 'RCC_GPIOB_ID' undeclared (first use in this function); did you mean 'RCC_GPIOA_ID'?
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOB_ID);
+                               ^~~~~~~~~~~~
+                               RCC_GPIOA_ID
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:122:31: error: 'RCC_GPIOC_ID' undeclared (first use in this function); did you mean 'RCC_GPIOB_ID'?
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOC_ID);
+                               ^~~~~~~~~~~~
+                               RCC_GPIOB_ID
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:127:31: error: 'RCC_GPIOD_ID' undeclared (first use in this function); did you mean 'RCC_GPIOC_ID'?
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOD_ID);
+                               ^~~~~~~~~~~~
+                               RCC_GPIOC_ID
+../Drivers/Src/stm32f1xx_hal_gpio_driver.c:132:31: error: 'RCC_GPIOE_ID' undeclared (first use in this function); did you mean 'RCC_GPIOD_ID'?
+   MCAL_RCC_reset(RCC_APB2_BUS,RCC_GPIOE_ID);
+                               ^~~~~~~~~~~~
+                               RCC_GPIOD_ID
+make: *** [Drivers/Src/subdir.mk:21: Drivers/Src/stm32f1xx_hal_gpio_driver.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j4 all" terminated with exit code 2. Build might be incomplete.
+20:22:04 **** Incremental Build of configuration Debug for project Bit_Banging ****
+make -j4 all 
+arm-none-eabi-gcc -gdwarf-2 "../Drivers/Src/stm32f1xx_hal_gpio_driver.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I../Inc -I"C:/Users/abdul/Desktop/Bit_Banging/Bit_Banging/Drivers/Includes" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/Src/stm32f1xx_hal_gpio_driver.d" -MT"Drivers/Src/stm32f1xx_hal_gpio_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/Src/stm32f1xx_hal_gpio_driver.o"
+arm-none-eabi-gcc -o "Bit_Banging.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Users\abdul\Desktop\Bit_Banging\Bit_Banging\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Bit_Banging.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Bit_Banging.elf
+ 
+arm-none-eabi-size   Bit_Banging.elf 
+arm-none-eabi-objdump -h -S  Bit_Banging.elf  > "Bit_Banging.list"
+arm-none-eabi-objcopy  -O binary  Bit_Banging.elf  "Bit_Banging.bin"
+   text	   data	    bss	    dec	    hex	filename
+    556	      8	   1568	   2132	    854	Bit_Banging.elf
+Finished building: default.size.stdout
+ 
+Finished building: Bit_Banging.bin
+ 
+Finished building: Bit_Banging.list
+ 

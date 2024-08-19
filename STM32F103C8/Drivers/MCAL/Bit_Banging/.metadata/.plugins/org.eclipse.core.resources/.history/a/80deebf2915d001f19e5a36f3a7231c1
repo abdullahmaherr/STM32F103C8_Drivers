@@ -1,0 +1,69 @@
+/*============================================================================================
+ * Module : SPI
+ *
+ * File Name : stm32f1xx_hal_spi.h
+ *
+ * Author: Abdullah Maher
+ *
+ * Description : Header File Of Bit Banging SPI
+ *
+ * Created on: Aug 18, 2024
+ =============================================================================================*/
+
+
+#ifndef INCLUDES_STM32F1XX_HAL_SPI_H_
+#define INCLUDES_STM32F1XX_HAL_SPI_H_
+
+/*===============================================================================
+ *                            User Type Definitions                              *
+ ================================================================================*/
+typedef struct{
+
+}SPI_GPIO_Pins;
+typedef struct
+{
+	uint16_t SPI_Mode;					/* Specifies The SPI Mode Master Or Slave Regarding to @ref SPI Mode*/
+
+	uint16_t SPI_SCK_Pin;					/* Specifies The SPI NSS GPIO Pin @ref SlaveSelectPin */
+
+}SPI_Config_t;
+
+/* @ref SPI Mode */
+#define SPI_MODE_MASTER										(0x00000004UL)
+#define SPI_MODE_SLAVE										(0x00000000UL)
+
+#define SPI_GPIOA_PIN1				{GPIOA,GPIO_PIN0,GPIO_PIN1,GPIO_PIN2,GPIO_PIN3}
+#define SPI_GPIOA_PIN4				{GPIOA,GPIO_PIN4,GPIO_PIN5,GPIO_PIN6,GPIO_PIN7}
+
+#define SPI_GPIOB_PIN1				{GPIOB,GPIO_PIN0,GPIO_PIN1,GPIO_PIN2,GPIO_PIN3}
+#define SPI_GPIOB_PIN4				{GPIOB,GPIO_PIN4,GPIO_PIN5,GPIO_PIN6,GPIO_PIN7}
+
+#define SPI_GPIOC_PIN1				{GPIOC,GPIO_PIN0,GPIO_PIN1,GPIO_PIN2,GPIO_PIN3}
+#define SPI_GPIOC_PIN4				{GPIOC,GPIO_PIN4,GPIO_PIN5,GPIO_PIN6,GPIO_PIN7}
+
+#define SPI_GPIOD_PIN1				{GPIOD,GPIO_PIN0,GPIO_PIN1,GPIO_PIN2,GPIO_PIN3}
+#define SPI_GPIOD_PIN4				{GPIOD,GPIO_PIN4,GPIO_PIN5,GPIO_PIN6,GPIO_PIN7}
+/*===============================================================================
+ *                                	   APIs 		   		                     *
+ ================================================================================*/
+
+/**===============================================================================
+ * Function Name  : HAL_SPI_Init.
+ * Brief          : Function To Initialize a Software SPI.
+ * Parameter (in) : Pointer to The Instant Configuration SPI.
+ * Return         : None.
+ * Note           : None.																					*/
+void MCAL_SPI_Init(SPI_Config_t* p_SPI_Config);
+
+
+/**===============================================================================
+ * Function Name  : MCAL_SPI_TransmitReceive.
+ * Brief          : Function To Transmit and Receive a Data in .
+ * Parameter (in) : Instant SPIx Could be 1 or 2.
+ * Parameter (in) : Pointer to The Data Buffer.
+ * Parameter (in) : Polling Mechanism State Enable/Disable.
+ * Return         : None.
+ * Note           : None.																					*/
+void MCAL_SPI_TransmitReceive(SPI_TypeDef* SPIx, uint16_t* p_Buffer, SPI_Polling_Mechanism a_PollingEn);
+
+#endif /* INCLUDES_STM32F1XX_HAL_SPI_H_ */

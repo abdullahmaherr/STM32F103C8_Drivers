@@ -1,0 +1,124 @@
+/*============================================================================================
+ * Module : SPI
+ *
+ * File Name : stm32f1xx_hal_spi.c
+ *
+ * Author: Abdullah Maher
+ *
+ * Description : Header File Of Bit Banging SPI
+ *
+ * Created on: Aug 18, 2024
+ =============================================================================================*/
+
+
+/*===============================================================================
+ *                                Includes                                       *
+ ================================================================================*/
+#include "std_types.h"
+#include "stm32f1xx_hal_spi.h"
+
+
+/*===============================================================================
+ *                            		  MACROS	                                 *
+ ================================================================================*/
+
+
+/*===============================================================================
+ *                              Global Variables                                 *
+ ================================================================================*/
+
+
+/*===============================================================================
+ *                        Private Function Prototypes	   		                 *
+ ================================================================================*/
+
+/*===============================================================================
+ *                              API Definitions                                  *
+ ================================================================================*/
+void HAL_SPI_startTransmitReceive(SPI_Config_t* p_SPI_Config, uint16_t* p_Buffer)
+{
+	uint8_t i;
+	uint16_t tempData = 0;
+	GPIO_PinConfig_t pinConfig;
+
+	if(p_SPI_Config->SPI_Mode == SPI_MODE_MASTER)	/* Master Mode */
+	{
+		/* Initializing The GPIO Pins*/
+		/* SCK */
+		pinConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_SCK_Pin;
+		pinConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* MOSI */
+		pinConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_MOSI_Pin;
+		pinConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* MISO */
+		pinConfig.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_MISO_Pin;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* NSS */
+		pinConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_NSS_Pin;
+		pinConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+		HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_NSS_Pin, LOGIC_HIGH); /* Default State*/
+
+
+		/* Start SPI Communication as master*/
+		HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_NSS_Pin, LOGIC_LOW);
+		for(i = 0; i < p_SPI_Config->SPI_DataSize; i++)
+		{
+			HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_SCK_Pin, LOGIC_LOW);
+			HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_MOSI_Pin, GET_BIT(*p_Buffer,0));
+			//delay
+			HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_SCK_Pin, LOGIC_HIGH);
+			tempData = (uint16_t)HAL_GPIO_ReadPin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_MISO_Pin);
+			//delay
+			*p_Buffer = ((tempData & 0x0001) << (p_SPI_Config->SPI_DataSize - 1)) | (*p_Buffer >> 1);
+		}
+		HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_NSS_Pin, LOGIC_HIGH); /* Default State*/
+
+	}else if(p_SPI_Config->SPI_Mode == SPI_MODE_SLAVE)	/* Slave Mode */
+	{
+		/* SCK */
+		pinConfig.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_SCK_Pin;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* MOSI */
+		pinConfig.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_MOSI_Pin;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* MISO */
+		pinConfig.GPIO_Mode = GPIO_MODE_OUTPUT_PUSHPULL;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_MISO_Pin;
+		pinConfig.GPIO_Output_Speed = GPIO_OUTPUT_SPEED_10M;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* NSS */
+		pinConfig.GPIO_Mode = GPIO_MODE_INPUT_AF_FLOATING;
+		pinConfig.GPIO_PinNumber = p_SPI_Config->SPI_Pins.SPI_NSS_Pin;
+		HAL_GPIO_Init(p_SPI_Config->SPI_Pins.GPIOx, &pinConfig);
+
+		/* Start SPI Communication as slave */
+		while(HAL_GPIO_ReadPin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_NSS_Pin) != LOGIC_LOW);
+		for(i = 0; i < p_SPI_Config->SPI_DataSize; i++)
+		{
+			while(HAL_GPIO_ReadPin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_SCK_Pin) != LOGIC_LOW);
+			tempData = (uint16_t)HAL_GPIO_ReadPin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_MOSI_Pin);
+
+			while(HAL_GPIO_ReadPin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_SCK_Pin) != LOGIC_HIGH);
+			HAL_GPIO_WritePin(p_SPI_Config->SPI_Pins.GPIOx, p_SPI_Config->SPI_Pins.SPI_MISO_Pin, GET_BIT(*p_Buffer, 0));
+
+			*p_Buffer = ((tempData & 0x0001) << (p_SPI_Config->SPI_DataSize - 1)) | (*p_Buffer >> 1);
+
+		}
+
+	}
+}
